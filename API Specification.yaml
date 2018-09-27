@@ -1,0 +1,363 @@
+openapi: 3.0.0
+info:
+  version: "1"
+  title: 'Glanceaction API'
+  description: 'Web Engineering II Project by Sascha Kipper and Dominik Stiller'
+  
+tags:
+  - name: account
+    description: Bank Accounts
+  - name: transaction
+    description: Financial Transactions
+  - name: category
+    description: Transaction Categories
+
+paths:
+  ### ACCOUNTS ###
+  /accounts:
+    get:
+      description: Return all existing accounts
+      tags:
+        - account
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+    post:
+      description: Create a new account
+      tags:
+        - account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewAccount'
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+  /accounts/{id}:
+    put:
+      description: Update an existing account
+      tags:
+        - account
+      parameters:
+        - $ref: '#/components/parameters/AccountId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeAccount'
+      responses:
+        '204':
+          description: Success
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      description: Delete an existing account
+      tags:
+        - account
+      parameters:
+        - $ref: '#/components/parameters/AccountId'
+      responses:
+        '204':
+          description: Success
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  ### TRANSACTIONS ###
+  /transactions:
+    get:
+      description: Return all existing transactions
+      tags:
+        - transaction
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionList'
+    post:
+      description: Create a new transaction
+      tags:
+        - transaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewTransaction'
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+  /transactions/{id}:
+    put:
+      description: Update an existing transaction
+      tags:
+        - transaction
+      parameters:
+        - $ref: '#/components/parameters/TransactionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeTransaction'
+      responses:
+        '204':
+          description: Success
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      description: Delete an existing transaction
+      tags:
+        - transaction
+      parameters:
+        - $ref: '#/components/parameters/TransactionId'
+      responses:
+        '204':
+          description: Success
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  ### CATEGORIES ###
+  /categories:
+    get:
+      description: Return all existing categories
+      tags:
+        - category
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+    post:
+      description: Create a new category
+      tags:
+        - category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+  /categories/{name}:
+    put:
+      description: Update an existing category
+      tags:
+        - category
+      parameters:
+        - $ref: '#/components/parameters/CategoryName'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+      responses:
+        '204':
+          description: Success
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      description: Delete an existing category
+      tags:
+        - category
+      parameters:
+        - $ref: '#/components/parameters/CategoryName'
+      responses:
+        '204':
+          description: Success
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+
+components:
+  ### MODELS ###
+  schemas:
+    Error:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        message:
+          type: string
+    Account:
+      type: object
+      required:
+        - id
+        - name
+        - balance
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        balance:
+          type: number
+          format: float
+          description: Account balance in Euro
+    NewAccount:
+      type: object
+      required:
+        - name
+        - initialBalance
+      properties:
+        name:
+          type: string
+        initialBalance:
+          type: number
+          format: float
+          description: Initial account balance in Euro
+    ChangeAccount:
+      type: object
+      properties:
+        name:
+          type: string
+        initialBalance:
+          type: number
+          format: float
+    Transaction:
+      type: object
+      required:
+        - id
+        - amount
+        - account
+        - timestamp
+      properties:
+        id:
+          type: integer
+          format: int32
+        amount:
+          type: number
+          format: float
+          description: Amount in Euro
+        category:
+          type: string
+          description: Name of the category to assign
+        account:
+          type: integer
+          format: int32
+        timestamp:
+          type: string
+          format: date-time
+          description: Instant at which the transaction happened, Format ISO 8601
+        notes:
+          type: string
+        recurrence:
+          type: integer
+          description: Interval of recurrence in days, 0 to disable
+    NewTransaction:
+      type: object
+      required:
+        - amount
+        - account
+        - timestamp
+      properties:
+        amount:
+          type: number
+          format: float
+        category:
+          type: string
+        account:
+          type: integer
+          format: int32
+        timestamp:
+          type: string
+          format: date-time
+        notes:
+          type: string
+        recurrence:
+          type: integer
+    ChangeTransaction:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: float
+        category:
+          type: string
+        account:
+          type: integer
+          format: int32
+        timestamp:
+          type: string
+          format: date-time
+        notes:
+          type: string
+        recurrence:
+          type: integer
+    TransactionList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Transaction'
+    Category:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        color:
+          type: string
+          format: hex-color
+  parameters:
+    AccountId:
+      name: id
+      description: ID of the account
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int32
+    TransactionId:
+      name: id
+      description: ID of the transaction
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int32
+    CategoryName:
+      name: name
+      description: Name of the category
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
