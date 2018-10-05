@@ -57,7 +57,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChangeAccount'
+              $ref: '#/components/schemas/UpdateAccount'
       responses:
         '204':
           description: Success
@@ -117,7 +117,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChangeTransaction'
+              $ref: '#/components/schemas/UpdateTransaction'
       responses:
         '204':
           description: Success
@@ -179,7 +179,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChangeCategory'
+              $ref: '#/components/schemas/UpdateCategory'
       responses:
         '204':
           description: Success
@@ -238,7 +238,7 @@ components:
           type: number
           format: float
           description: Initial account balance in Euro
-    ChangeAccount:
+    UpdateAccount:
       type: object
       properties:
         name:
@@ -298,7 +298,7 @@ components:
           type: string
         recurrence:
           type: integer
-    ChangeTransaction:
+    UpdateTransaction:
       type: object
       properties:
         amount:
@@ -330,7 +330,7 @@ components:
         color:
           type: string
           format: hex-color
-    ChangeCategory:
+    UpdateCategory:
       type: object
       properties:
         name:
