@@ -179,7 +179,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Category'
+              $ref: '#/components/schemas/ChangeCategory'
       responses:
         '204':
           description: Success
@@ -324,6 +324,14 @@ components:
       type: object
       required:
         - name
+      properties:
+        name:
+          type: string
+        color:
+          type: string
+          format: hex-color
+    ChangeCategory:
+      type: object
       properties:
         name:
           type: string
