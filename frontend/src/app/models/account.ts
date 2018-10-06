@@ -15,7 +15,7 @@ export interface NewAccount {
   initialBalance: number;
 }
 
-export interface ChangeAccount {
+export interface UpdateAccount {
   name?: string;
   initialBalance?: number;
 }

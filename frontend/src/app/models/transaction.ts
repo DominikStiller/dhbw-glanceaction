@@ -29,7 +29,7 @@ export interface NewTransaction {
   recurrence?: number;
 }
 
-export interface ChangeTransaction {
+export interface UpdateTransaction {
   amount?: number;
   category?: string;
   account?: number;
