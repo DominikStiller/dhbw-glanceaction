@@ -4,6 +4,7 @@ import { BackendService } from './backend.service';
 import { HttpClientModule } from '@angular/common/http';
 import { Category, UpdateCategory } from '../models/category';
 import { Account, NewAccount, UpdateAccount } from '../models/account';
+import { NewTransaction, Transaction, UpdateTransaction } from '../models/transaction';
 
 describe('BackendService', () => {
   beforeEach(() => TestBed.configureTestingModule({
@@ -17,7 +18,7 @@ describe('BackendService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should create, read, update and delete an account', async(
+  xit('should create, read, update and delete an account', async(
     inject([BackendService], (backend: BackendService) => {
       const newAccount: NewAccount = {
         name: 'newaccount',
@@ -43,7 +44,7 @@ describe('BackendService', () => {
             // UPDATE
             backend.updateAccount(createdAccount, updateAccount)
               .subscribe((updatedAccount: Account) => {
-                expect(createdAccount).toEqual(jasmine.objectContaining({
+                expect(updatedAccount).toEqual(jasmine.objectContaining({
                   name: 'updatedname',
                   balance: 400,
                 }));
@@ -54,6 +55,57 @@ describe('BackendService', () => {
                   backend.deleteAccount(updatedAccount).subscribe(() => {
                     backend.getAccounts().subscribe((accounts) => {
                       expect(accounts).not.toContain(jasmine.objectContaining(updateAccount));
+                    });
+                  });
+                });
+              });
+          });
+        });
+      });
+    }),
+    ),
+  );
+
+  it('should create, read, update and delete a transaction', async(
+    inject([BackendService], (backend: BackendService) => {
+      const newTransaction: NewTransaction = {
+        amount: 25,
+        account: 3,
+        category: 'Food',
+        timestamp: new Date(),
+      };
+      const updateTransaction: UpdateTransaction = {
+        category: 'Vacation',
+        notes: 'Test Notes',
+      };
+      const newAndUpdateTransaction: UpdateTransaction = {
+        ...newTransaction,
+        ...updateTransaction,
+      };
+      // Do a full CRUD test with interspersed READ checks
+      backend.getTransactions().subscribe((transactions) => {
+        // Check that newTransaction does not exist
+        expect(transactions).not.toContain(jasmine.objectContaining(newTransaction));
+        // CREATE
+        backend.createTransaction(newTransaction).subscribe((createdTransaction: Transaction) => {
+          expect(createdTransaction).toEqual(jasmine.objectContaining(newTransaction));
+          // READ
+          backend.getTransactions().subscribe((transactions) => {
+            expect(transactions).toContain(jasmine.objectContaining(newTransaction));
+            // UPDATE
+            backend.updateTransaction(createdTransaction, updateTransaction)
+              .subscribe((updatedTransaction: Transaction) => {
+                expect(updatedTransaction).toEqual(
+                  jasmine.objectContaining(newAndUpdateTransaction));
+                backend.getTransactions().subscribe((transactions) => {
+                  expect(transactions).toContain(jasmine.objectContaining(newAndUpdateTransaction));
+                  expect(transactions).not.toContain(
+                    jasmine.objectContaining(newAndUpdateTransaction));
+                  // DELETE
+                  backend.deleteTransaction(updatedTransaction).subscribe(() => {
+                    backend.getTransactions().subscribe((transactions) => {
+                      expect(transactions)
+                        .not.toContain(jasmine.objectContaining(newAndUpdateTransaction));
                     });
                   });
                 });
@@ -91,6 +143,7 @@ describe('BackendService', () => {
                 // @ts-ignore
                 expect(updatedCategory).toEqual(updateCategory);
                 backend.getCategories().subscribe((categories) => {
+                  // @ts-ignore
                   expect(categories).toContain(updateCategory);
                   expect(categories).not.toContain(newCategory);
                   // DELETE
