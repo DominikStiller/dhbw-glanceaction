@@ -1,0 +1,21 @@
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+#app-container {
+  max-width: 1400px;
+  margin: 8em auto 2em;
+  padding: 0 2em;
+
+  div {
+    color: black;
+  }
+}
+

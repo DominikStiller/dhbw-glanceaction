@@ -1,5 +1,16 @@
-<ul>
-  <li *ngFor="let t of transactions">
+<div gdAuto gdGap="3">
+  <div *ngFor="let t of transactions" fxLayout="row">
+  <span class="col-2">
+    {{ t.timestamp | date }}
+  </span>
+    <span class="col-2">
+    {{ t.account }}
+  </span>
+    <span class="col-3">
+    {{ t.notes }}
+  </span>
+    <span class="col-1">
     {{ t.amount }} €
-  </li>
-</ul>
+  </span>
+  </div>
+</div>
