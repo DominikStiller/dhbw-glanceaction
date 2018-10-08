@@ -13,6 +13,13 @@ app.use(expressValidator());
 
 app.use(cookieParser());
 
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Origin, Content-Type");
+    res.header("Access-Control-Allow-Methods", "POST, GET, DELETE, PUT, OPTIONS");
+    next();
+});
+
 // Routes used for the different services
 app.use('/api', require('./routes/accountRoutes'));
 app.use('/api', require('./routes/categoryRoutes'));
