@@ -282,12 +282,12 @@ components:
         timestamp:
           type: string
           format: date-time
-          description: Instant at which the transaction happened, Format ISO 8601
+          description: 'Instant at which the transaction happened<br>Format: ISO 8601'
         notes:
           type: string
         recurrence:
-          type: integer
-          description: Interval of recurrence in days, 0 to disable
+          type: string
+          description: "Format: 'i n'<br>i: Interval of recurrence in days<br>n: Amount of recurrences<br>'0 0' to disable"
     NewTransaction:
       type: object
       required:
@@ -309,7 +309,7 @@ components:
         notes:
           type: string
         recurrence:
-          type: integer
+          type: string
     UpdateTransaction:
       type: object
       properties:
@@ -327,7 +327,7 @@ components:
         notes:
           type: string
         recurrence:
-          type: integer
+          type: string
     TransactionList:
       type: array
       items:
