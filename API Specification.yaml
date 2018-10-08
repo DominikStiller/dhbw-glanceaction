@@ -3,7 +3,7 @@ info:
   version: "1"
   title: 'Glanceaction API'
   description: 'Web Engineering II Project by Sascha Kipper and Dominik Stiller'
-  
+
 tags:
   - name: account
     description: Bank Accounts
@@ -61,6 +61,10 @@ paths:
       responses:
         '204':
           description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
         '404':
           $ref: '#/components/responses/NotFound'
     delete:
@@ -121,6 +125,10 @@ paths:
       responses:
         '204':
           description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
         '404':
           $ref: '#/components/responses/NotFound'
     delete:
@@ -183,6 +191,10 @@ paths:
       responses:
         '204':
           description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
         '404':
           $ref: '#/components/responses/NotFound'
     delete:
