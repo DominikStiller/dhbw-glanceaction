@@ -18,43 +18,45 @@ describe('BackendService', () => {
     expect(service).toBeTruthy();
   });
 
-  xit('should create, read, update and delete an account', async(
+  it('should create, read, update and delete an account', async(
     inject([BackendService], (backend: BackendService) => {
       const newAccount: NewAccount = {
         name: 'newaccount',
         initialBalance: 500.39,
       };
+      const newAccountExpected = jasmine.objectContaining({
+        name: 'newaccount',
+        balance: 500.39,
+      });
       const updateAccount: UpdateAccount = {
         name: 'updatedname',
         initialBalance: 400,
       };
+      const updateAccountExpected = jasmine.objectContaining({
+        name: 'updatedname',
+        balance: 400,
+      });
       // Do a full CRUD test with interspersed READ checks
       backend.getAccounts().subscribe((accounts) => {
         // Check that newAccount does not exist
-        expect(accounts).not.toContain(jasmine.objectContaining(newAccount));
+        expect(accounts).not.toContain(newAccountExpected);
         // CREATE
         backend.createAccount(newAccount).subscribe((createdAccount: Account) => {
-          expect(createdAccount).toEqual(jasmine.objectContaining({
-            name: 'newaccount',
-            balance: 500.39,
-          }));
+          expect(createdAccount).toEqual(newAccountExpected);
           // READ
           backend.getAccounts().subscribe((accounts) => {
-            expect(accounts).toContain(jasmine.objectContaining(newAccount));
+            expect(accounts).toContain(newAccountExpected);
             // UPDATE
             backend.updateAccount(createdAccount, updateAccount)
               .subscribe((updatedAccount: Account) => {
-                expect(updatedAccount).toEqual(jasmine.objectContaining({
-                  name: 'updatedname',
-                  balance: 400,
-                }));
+                expect(updatedAccount).toEqual(updateAccountExpected);
                 backend.getAccounts().subscribe((accounts) => {
-                  expect(accounts).toContain(jasmine.objectContaining(updateAccount));
-                  expect(accounts).not.toContain(jasmine.objectContaining(newAccount));
+                  expect(accounts).toContain(updateAccountExpected);
+                  expect(accounts).not.toContain(newAccountExpected);
                   // DELETE
                   backend.deleteAccount(updatedAccount).subscribe(() => {
                     backend.getAccounts().subscribe((accounts) => {
-                      expect(accounts).not.toContain(jasmine.objectContaining(updateAccount));
+                      expect(accounts).not.toContain(updateAccountExpected);
                     });
                   });
                 });
@@ -117,7 +119,7 @@ describe('BackendService', () => {
     ),
   );
 
-  xit('should create, read, update and delete a category', async(
+  it('should create, read, update and delete a category', async(
     inject([BackendService], (backend: BackendService) => {
       const newCategory: Category = {
         name: 'newcategory',

@@ -9,6 +9,9 @@
       <option name="SPACES_WITHIN_OBJECT_LITERAL_BRACES" value="true" />
       <option name="SPACES_WITHIN_IMPORTS" value="true" />
     </TypeScriptCodeStyleSettings>
+    <yaml>
+      <option name="INDENT_SEQUENCE_VALUE" value="true" />
+    </yaml>
     <codeStyleSettings language="TypeScript">
       <option name="RIGHT_MARGIN" value="100" />
     </codeStyleSettings>
