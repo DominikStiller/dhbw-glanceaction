@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, EMPTY, of, throwError } from 'rxjs';
+import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { environment } from '../../environments/environment';
@@ -20,27 +20,6 @@ const httpOptions = {
 export class BackendService {
 
   constructor(private http: HttpClient) {
-    this.createTransaction({
-      amount: 25,
-      account: 2,
-      timestamp: new Date(),
-      category: 'Food',
-      notes: 'Chinese takeout',
-    });
-    this.createTransaction({
-      amount: 534.79,
-      account: 3,
-      timestamp: new Date(),
-      category: 'Vacation',
-      notes: 'Flight',
-    });
-    this.createTransaction({
-      amount: 18.99,
-      account: 3,
-      timestamp: new Date(),
-      category: 'Vacation',
-      notes: 'Baggage fee',
-    });
   }
 
   /**
@@ -55,54 +34,42 @@ export class BackendService {
       .pipe(catchError(BackendService.handleError));
   }
 
-  updateAccount(oldAccount: Account | number, updatedAccount: UpdateAccount) {
-    const id = typeof oldAccount === 'number' ? oldAccount : oldAccount.id;
+  updateAccount(accountId: number, updatedAccount: UpdateAccount) {
     return this.http.put<Account>(
-      BackendService.url(`accounts/${id}`),
+      BackendService.url(`accounts/${accountId}`),
       updatedAccount,
       httpOptions,
     ).pipe(catchError(BackendService.handleError));
   }
 
-  deleteAccount(account: Account | number) {
-    const id = typeof account === 'number' ? account : account.id;
-    return this.http.delete(BackendService.url(`accounts/${id}`))
+  deleteAccount(accountId: number) {
+    return this.http.delete(BackendService.url(`accounts/${accountId}`))
       .pipe(catchError(BackendService.handleError));
   }
 
   /**
    * TRANSACTIONS
    */
-  transactionsNextId = 1;
-  transactions: Transaction[] = [];
-
-  getTransactions(): Observable<Transaction[]> {
-    return of(this.transactions);
+  getTransactions() {
+    return this.http.get<Transaction[]>(BackendService.url('transactions'));
   }
 
   createTransaction(transaction: NewTransaction) {
-    this.transactions.push(Object.assign({ id: this.transactionsNextId }, transaction));
-    this.transactionsNextId += 1;
-    return EMPTY;
+    return this.http.post<Transaction>(BackendService.url('transactions'), transaction, httpOptions)
+      .pipe(catchError(BackendService.handleError));
   }
 
-  updateTransaction(oldTransaction: Transaction | number, updatedTransaction: UpdateTransaction) {
-    const id = typeof oldTransaction === 'number' ? oldTransaction : oldTransaction.id;
-    let merged = {};
-    this.transactions = this.transactions.map((t) => {
-      if (t.id === id) {
-        merged = Object.assign(t, updatedTransaction);
-      } else {
-        return t;
-      }
-    });
-    return of(merged);
+  updateTransaction(transactionId: number, updatedTransaction: UpdateTransaction) {
+    return this.http.put<Transaction>(
+      BackendService.url(`transactions/${transactionId}`),
+      updatedTransaction,
+      httpOptions,
+    ).pipe(catchError(BackendService.handleError));
   }
 
-  deleteTransaction(transaction: Transaction | number) {
-    const id = typeof transaction === 'number' ? transaction : transaction.id;
-    this.transactions = this.transactions.filter(t => t.id !== id);
-    return EMPTY;
+  deleteTransaction(transactionId: number) {
+    return this.http.delete(BackendService.url(`transactions/${transactionId}`))
+      .pipe(catchError(BackendService.handleError));
   }
 
   /**
@@ -117,18 +84,16 @@ export class BackendService {
       .pipe(catchError(BackendService.handleError));
   }
 
-  updateCategory(oldCategory: Category | string, updatedCategory: UpdateCategory) {
-    const name = typeof oldCategory === 'string' ? oldCategory : oldCategory.name;
+  updateCategory(categoryName: string, updatedCategory: UpdateCategory) {
     return this.http.put<Category>(
-      BackendService.url(`categories/${name}`),
+      BackendService.url(`categories/${categoryName}`),
       updatedCategory,
       httpOptions,
     ).pipe(catchError(BackendService.handleError));
   }
 
-  deleteCategory(category: Category | string) {
-    const name = typeof category === 'string' ? category : category.name;
-    return this.http.delete(BackendService.url(`categories/${name}`))
+  deleteCategory(categoryName: string) {
+    return this.http.delete(BackendService.url(`categories/${categoryName}`))
       .pipe(catchError(BackendService.handleError));
   }
 
