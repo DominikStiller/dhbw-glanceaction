@@ -10,14 +10,18 @@ export class Transaction {
   category?: string;
   account: number;
   /**
-   * Instant at which the transaction happened, Format ISO 8601
+   * Instant at which the transaction happened
+   * Format: ISO 8601
    */
   timestamp: Date;
   notes?: string;
   /**
-   * Interval of recurrence in days, 0 to disable
+   * Format: 'i n'
+   * i: Interval of recurrence in days
+   * n: Amount of recurrences
+   * '0 0' to disable
    */
-  recurrence?: number;
+  recurrence?: string;
 }
 
 export interface NewTransaction {
