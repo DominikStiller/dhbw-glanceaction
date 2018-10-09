@@ -3,7 +3,7 @@ import { BackendService } from './backend.service';
 import { NewTransaction, Transaction, UpdateTransaction } from '../models/transaction';
 import { Category, UpdateCategory } from '../models/category';
 import { Account, NewAccount, UpdateAccount } from '../models/account';
-import { catchError, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +16,7 @@ export class GlanceactionService {
 
   constructor(private backend: BackendService) {
     backend.getAccounts().subscribe(d => this.accounts = d);
-    backend.getTransactions().subscribe(d => {
+    backend.getTransactions().subscribe((d) => {
       this.transactions = d;
       this.sortTransactions();
     });
@@ -89,8 +89,8 @@ export class GlanceactionService {
   /**
    * CATEGORIES
    */
-  getCategory(id: number) {
-    return this.categories.find(c => c.id === id);
+  getCategory(name: string) {
+    return this.categories.find(c => c.name === name);
   }
 
   createCategory(category: Category) {

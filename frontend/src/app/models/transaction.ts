@@ -11,9 +11,8 @@ export class Transaction {
   account: number;
   /**
    * Instant at which the transaction happened
-   * Format: ISO 8601
    */
-  timestamp: Date;
+  timestamp: string;
   notes?: string;
   /**
    * Format: 'i n'
@@ -28,7 +27,7 @@ export interface NewTransaction {
   amount: number;
   category?: string;
   account: number;
-  timestamp: Date;
+  timestamp: string;
   notes?: string;
   recurrence?: number;
 }
@@ -37,7 +36,7 @@ export interface UpdateTransaction {
   amount?: number;
   category?: string;
   account?: number;
-  timestamp?: Date;
+  timestamp?: string;
   notes?: string;
   recurrence?: number;
 }

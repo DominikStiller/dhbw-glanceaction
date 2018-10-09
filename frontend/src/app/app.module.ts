@@ -9,7 +9,6 @@ import { CreateEditTransactionDialogComponent } from './components/create-edit-t
 import { AccountNamePipe } from './pipes/account-name.pipe';
 import { SearchFilterPipe } from './pipes/search-filter.pipe';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CategoryNamePipe } from './pipes/category-name.pipe';
 
 @NgModule({
   declarations: [
@@ -18,7 +17,6 @@ import { CategoryNamePipe } from './pipes/category-name.pipe';
     CreateEditTransactionDialogComponent,
     AccountNamePipe,
     SearchFilterPipe,
-    CategoryNamePipe,
   ],
   imports: [
     BrowserModule,
@@ -31,7 +29,7 @@ import { CategoryNamePipe } from './pipes/category-name.pipe';
   bootstrap: [AppComponent],
   entryComponents: [
     CreateEditTransactionDialogComponent,
-  ]
+  ],
 })
 export class AppModule {
 }
