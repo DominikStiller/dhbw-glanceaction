@@ -1,6 +1,7 @@
 <component name="ProjectCodeStyleConfiguration">
   <code_scheme name="Project" version="173">
     <option name="LINE_SEPARATOR" value="&#10;" />
+    <option name="RIGHT_MARGIN" value="180" />
     <TypeScriptCodeStyleSettings>
       <option name="FORCE_SEMICOLON_STYLE" value="true" />
       <option name="USE_DOUBLE_QUOTES" value="false" />
@@ -13,7 +14,7 @@
       <option name="INDENT_SEQUENCE_VALUE" value="true" />
     </yaml>
     <codeStyleSettings language="TypeScript">
-      <option name="RIGHT_MARGIN" value="100" />
+      <option name="RIGHT_MARGIN" value="180" />
     </codeStyleSettings>
   </code_scheme>
 </component>
