@@ -1,0 +1,84 @@
+<div class="modal-header">
+  <h5 class="modal-title">Edit transaction</h5>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+
+  <form [formGroup]="model">
+    <div class="form-group row">
+      <label class="col-2 col-form-label" for="input-amount">Amount</label>
+      <div class="col">
+        <input type="number" step="0.01"
+               class="form-control" formControlName="amount" id="input-amount"
+               required>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-2 col-form-label" for="input-category">Category</label>
+      <div class="input-group col">
+        <select class="form-control" formControlName="category" id="input-category">
+          <option [value]="null" class="text-dark bg-white">
+            No category
+          </option>
+          <option *ngFor="let c of g.categories"
+                  [style.background-color]="c.color"
+                  [value]="c.name">{{ category.name }}
+          </option>
+
+        </select>
+        <div class="input-group-append">
+          <button class="btn btn-light input-group-text" type="button"
+                  id="addcategory-button" data-toggle="popover"
+                  title="Add a category">
+            <span class="oi oi-plus"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  <div class="form-group row">
+    <label class="col-2 col-form-label" for="input-account">Account</label>
+    <div class="input-group col">
+      <select class="form-control" formControlName="category" id="input-account">
+        <option [value]="null" class="text-dark bg-white">
+          No category
+        </option>
+        <option *ngFor="let c of g.categories"
+                [style.background-color]="c.color"
+                [value]="c.name">{{ category.name }}
+        </option>
+
+      </select>
+      <div class="input-group-append">
+        <button class="btn btn-light input-group-text" type="button"
+                id="addaccount-button" data-toggle="popover"
+                title="Add a category">
+          <span class="oi oi-plus"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+    <div class="form-group row">
+      <label class="col-2 col-form-label">Date</label>
+      <div class="col">
+        <div class="input-group">
+          <input type="date" class="form-control col" formControlName="timestampDate" required>
+          <input type="time" class="form-control col" formControlName="timestampTime" required>
+        </div>
+      </div>
+    </div>
+    <!-- TODO Notes and recurrence, add buttons for weekly, monthly -->
+  </form>
+
+</div>
+<div class="modal-footer">
+  <button type="submit" class="btn btn-primary" (click)="submit()">
+    {{ creationMode ? 'Create' : 'Save' }}
+  </button>
+  <button type="button" class="btn btn-danger" (click)="delete()" *ngIf="!creationMode">
+    <span class="oi oi-trash"></span>
+    Delete
+  </button>
+  <button type="button" class="btn btn-secondary" (click)="activeModal.close()">Cancel</button>
+</div>

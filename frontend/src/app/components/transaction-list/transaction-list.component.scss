@@ -1,0 +1,11 @@
+@import "../../../styles/settings";
+
+.transaction {
+  padding: 10px 0;
+  margin: 10px 0;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $smoke;
+  }
+}

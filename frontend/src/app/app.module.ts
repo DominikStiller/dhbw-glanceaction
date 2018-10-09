@@ -1,25 +1,37 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AppComponent } from './app.component';
-import { TransactionListComponent } from './transaction-list/transaction-list.component';
+import { TransactionListComponent } from './components/transaction-list/transaction-list.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CreateEditTransactionDialogComponent } from './components/create-edit-transaction-dialog/create-edit-transaction-dialog.component';
+import { AccountNamePipe } from './pipes/account-name.pipe';
+import { SearchFilterPipe } from './pipes/search-filter.pipe';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CategoryNamePipe } from './pipes/category-name.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     TransactionListComponent,
+    CreateEditTransactionDialogComponent,
+    AccountNamePipe,
+    SearchFilterPipe,
+    CategoryNamePipe,
   ],
   imports: [
     BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
-    BrowserAnimationsModule,
-    FlexLayoutModule,
+    NgbModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
+  entryComponents: [
+    CreateEditTransactionDialogComponent,
+  ]
 })
 export class AppModule {
 }
