@@ -135,3 +135,5 @@ typings/
 
 # Serverless directories
 .serverless
+
+src/backend/database
