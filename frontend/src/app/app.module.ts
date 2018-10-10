@@ -9,6 +9,7 @@ import { CreateEditTransactionDialogComponent } from './components/create-edit-t
 import { AccountNamePipe } from './pipes/account-name.pipe';
 import { SearchFilterPipe } from './pipes/search-filter.pipe';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     HttpClientModule,
     NgbModule,
   ],
-  providers: [],
+  providers: [
+    DatePipe
+  ],
   bootstrap: [AppComponent],
   entryComponents: [
     CreateEditTransactionDialogComponent,

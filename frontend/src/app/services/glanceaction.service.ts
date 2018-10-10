@@ -39,7 +39,7 @@ export class GlanceactionService {
     const id = typeof oldAccount === 'number' ? oldAccount : oldAccount.id;
     return this.backend.updateAccount(id, updatedAccount)
       .pipe(tap((responseAccount) => {
-        this.accounts = this.accounts.map(a => a.id === id ? Object.assign(a, responseAccount) : a);
+        this.accounts = this.accounts.map(a => a.id === id ? Object.assign(a, updatedAccount) : a);
       }));
   }
 
@@ -63,7 +63,7 @@ export class GlanceactionService {
     const id = typeof oldTransaction === 'number' ? oldTransaction : oldTransaction.id;
     return this.backend.updateTransaction(id, updatedTransaction)
       .pipe(tap((responseTransaction) => {
-        this.transactions = this.transactions.map(t => t.id === id ? Object.assign(t, responseTransaction) : t);
+        this.transactions = this.transactions.map(t => t.id === id ? Object.assign(t, updatedTransaction) : t);
         this.sortTransactions();
       }));
   }
@@ -103,7 +103,7 @@ export class GlanceactionService {
     return this.backend.updateCategory(name, updatedCategory)
       .pipe(tap((responseCategory) => {
         // Patch local version
-        this.categories = this.categories.map(c => c.name === name ? Object.assign(c, responseCategory) : c);
+        this.categories = this.categories.map(c => c.name === name ? Object.assign(c, updatedCategory) : c);
       }));
   }
 

@@ -1,8 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { NewTransaction, Transaction } from '../../models/transaction';
 import { GlanceactionService } from '../../services/glanceaction.service';
 import { NgbActiveModal, NgbDateStruct, NgbCalendar, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
-import { Form, FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-create-edit-transaction-dialog',
@@ -11,9 +12,14 @@ import { Form, FormBuilder, FormGroup } from '@angular/forms';
 })
 export class CreateEditTransactionDialogComponent implements OnInit {
 
+  RecurrenceType = RecurrenceType;
+
   @Input() t: Transaction;
+  @ViewChild('domForm') domForm: ElementRef;
   private model: FormModel;
   creationMode: boolean;
+
+  displayValidation: boolean = false;
 
   form: FormGroup;
 
@@ -21,23 +27,35 @@ export class CreateEditTransactionDialogComponent implements OnInit {
               public activeModal: NgbActiveModal,
               private fb: FormBuilder,
               private ngbCalendar: NgbCalendar,
-              private ngbDateParser: NgbDateParserFormatter) {
+              private ngbDateParser: NgbDateParserFormatter,
+              private datePipe: DatePipe) {
   }
 
   ngOnInit() {
     this.creationMode = this.t === null;
     if (this.creationMode) {
-      this.model = new FormModel(this.ngbCalendar);
+      this.model = new FormModel(this.ngbCalendar, this.datePipe);
     } else {
-      this.model = FormModel.fromTransaction(this.t, this.ngbDateParser);
+      this.model = FormModel.fromTransaction(this.t, this.ngbDateParser, this.datePipe);
     }
 
     this.form = this.fb.group(this.model);
   }
 
   submit() {
-    const newTransaction = FormModel.toNewTransaction(this.model);
-    console.log(newTransaction);
+    if (!this.domForm.nativeElement.checkValidity()) {
+      this.displayValidation = true;
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
+    const newTransaction = FormModel.toNewTransaction(Object.assign({}, this.form.value));
+    if (this.creationMode) {
+      this.g.createTransaction(newTransaction).subscribe(() => this.activeModal.close());
+    } else {
+      this.g.updateTransaction(this.t, newTransaction).subscribe(() => this.activeModal.close());
+    }
   }
 
   delete() {
@@ -48,27 +66,40 @@ export class CreateEditTransactionDialogComponent implements OnInit {
 class FormModel {
   amount: number = undefined;
   category: string = null;
-  account: number;
+  account: number = undefined;
   timestampDate: NgbDateStruct;
-  timestampTime: string = FormModel.dateToTime(new Date());
+  timestampTime: string;
   notes: string = '';
+  recurrenceType: RecurrenceType = RecurrenceType.None;
   recurrenceInterval: number = 0;
-  recurrenceAmount: number = 0;
+  recurrenceAmount: number = 10;
 
-  constructor(ngbCalendar: NgbCalendar) {
+  constructor(ngbCalendar: NgbCalendar, datePipe: DatePipe) {
+    // TODO select default account
     this.timestampDate = ngbCalendar.getToday();
+    this.timestampTime = datePipe.transform(new Date(), 'HH:mm');
   }
 
-  static fromTransaction(t: Transaction, dateParser: NgbDateParserFormatter): FormModel {
+  static fromTransaction(t: Transaction, dateParser: NgbDateParserFormatter, datePipe: DatePipe): FormModel {
+    let recurrenceType = RecurrenceType.Custom;
+    if (t.recurrence === 0) {
+      recurrenceType = RecurrenceType.None;
+    }
+    if (t.recurrence === 7) {
+      recurrenceType = RecurrenceType.Weekly;
+    }
     return {
       amount: t.amount,
       category: t.category,
       account: t.account,
       timestampDate: dateParser.parse(t.timestamp),
-      timestampTime: FormModel.dateToTime(new Date(t.timestamp)),
+      timestampTime: datePipe.transform(new Date(t.timestamp), 'HH:mm'),
       notes: t.notes,
-      recurrenceInterval: Number(t.recurrence.charAt(0)),
-      recurrenceAmount: Number(t.recurrence.charAt(2)),
+      recurrenceType: recurrenceType,
+      recurrenceInterval: t.recurrence,
+      recurrenceAmount: 0,
+      // recurrenceInterval: Number(t.recurrence.charAt(0)),
+      // recurrenceAmount: Number(t.recurrence.charAt(2)),
     };
   }
 
@@ -78,12 +109,13 @@ class FormModel {
       model.timestampDate.month - 1,
       model.timestampDate.day,
       Number(model.timestampTime.substr(0, 2)),
-      Number(model.timestampTime.substring(2)),
+      Number(model.timestampTime.substring(3)),
     );
+
     return {
       amount: model.amount,
       category: model.category,
-      account: model.account,
+      account: Number(model.account),
       timestamp: timestamp.toISOString(),
       notes: model.notes,
       recurrence: model.recurrenceAmount,
@@ -94,4 +126,11 @@ class FormModel {
   private static dateToTime(date: Date): string {
     return `${date.getHours()}:${date.getMinutes()}`;
   }
+}
+
+enum RecurrenceType {
+  None = 'n',
+  Weekly = 'w',
+  Monthly = 'm',
+  Custom = 'c',
 }

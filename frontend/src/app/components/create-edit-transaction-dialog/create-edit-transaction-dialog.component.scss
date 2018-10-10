@@ -1,0 +1,13 @@
+@import "~src/scss/mixins";
+
+label {
+  @include not-selectable();
+}
+
+.secondary-label {
+  line-height: 1;
+
+  label {
+    padding: 0;
+  }
+}

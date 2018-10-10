@@ -20,12 +20,12 @@ export class TransactionListComponent implements OnInit {
   }
 
   createTransaction() {
-    const modalRef = this.modalService.open(CreateEditTransactionDialogComponent);
+    const modalRef = this.modalService.open(CreateEditTransactionDialogComponent, { size: 'lg' });
     modalRef.componentInstance.t = null;
   }
 
   editTransaction(t: Transaction) {
-    const modalRef = this.modalService.open(CreateEditTransactionDialogComponent);
+    const modalRef = this.modalService.open(CreateEditTransactionDialogComponent, { size: 'lg' });
     modalRef.componentInstance.t = t;
   }
 }

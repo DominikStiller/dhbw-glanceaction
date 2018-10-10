@@ -20,7 +20,8 @@ export class Transaction {
    * n: Amount of recurrences
    * '0 0' to disable
    */
-  recurrence?: string;
+  // TODO set type to string
+  recurrence?: number;
 }
 
 export interface NewTransaction {
