@@ -19,23 +19,22 @@
 
 <!-- TODO Account information header -->
 
-<div>
-  <div *ngFor="let t of (g.transactions | searchFilter:searchTerm)" class="row transaction" (click)="editTransaction(t)">
-  <span class="col-2 col-lg-1">
-    {{ t.timestamp | date:'MMM d' }}
+<div *ngFor="let t of (g.transactions | searchFilter:searchTerm)" class="row transaction" (click)="editTransaction(t)">
+  <span class="col-2 col-md-3">
+    <span class="d-none d-md-inline">{{ t.timestamp | date:'longDate' }}</span>
+    <span class="d-md-none">{{ t.timestamp | date:'MMM d' }}</span>
     <br>
     {{ t.timestamp | date:'HH:mm' }}
   </span>
-    <span class="col-2">
-    {{ t.account | accountName }}
-  </span>
-    <span class="col">
+  <span class="col">
     {{ t.notes }}
   </span>
-    <span class="col-1">
-      <br>
-    {{ t.amount | currency:'EUR' }}
+  <span class="col-4 col-lg-2 text-right">
+    <small class="text-muted">{{ t.account | accountName }}</small>
+    <br>
+    <span [class.text-success]="t.amount > 0" [class.text-danger]="t.amount < 0">{{ t.amount | currency:'EUR' }}</span>
   </span>
-  </div>
 </div>
-<!-- TODO Sum -->
+<div class="row">
+  <span class="col text-right text-large">{{ g.totalAccountBalance | currency:'EUR' }}</span>
+</div>

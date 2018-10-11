@@ -3,7 +3,8 @@ import { BackendService } from './backend.service';
 import { NewTransaction, Transaction, UpdateTransaction } from '../models/transaction';
 import { Category, UpdateCategory } from '../models/category';
 import { Account, NewAccount, UpdateAccount } from '../models/account';
-import { map, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
+import { Observable, forkJoin } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -13,12 +14,17 @@ export class GlanceactionService {
   accounts: Account[];
   transactions: Transaction[] = [];
   categories: Category[];
+  totalAccountBalance: number = 0;
 
   constructor(private backend: BackendService) {
-    backend.getAccounts().subscribe(d => this.accounts = d);
-    backend.getTransactions().subscribe((d) => {
-      this.transactions = d;
+    forkJoin(
+      backend.getAccounts(),
+      backend.getTransactions(),
+    ).subscribe((res) => {
+      this.accounts = res[0];
+      this.transactions = res[1];
       this.sortTransactions();
+      this.calculateTotalAccountBalance();
     });
     backend.getCategories().subscribe(d => this.categories = d);
   }
@@ -28,6 +34,20 @@ export class GlanceactionService {
    */
   getAccount(id: number) {
     return this.accounts.find(a => a.id === id);
+  }
+
+  getAccountBalance(id: number) {
+    return this.transactions
+      .filter(a => a.id === id)
+      .map(t => t.amount)
+      .reduce((a, b) => a + b, 0);
+  }
+
+  private calculateTotalAccountBalance() {
+    this.totalAccountBalance = this.accounts.map(a => a.balance).reduce((a, b) => a + b, 0);
+    this.totalAccountBalance += this.transactions
+      .map(t => t.amount)
+      .reduce((a, b) => a + b, 0);
   }
 
   createAccount(account: NewAccount) {
@@ -40,12 +60,14 @@ export class GlanceactionService {
     return this.backend.updateAccount(id, updatedAccount)
       .pipe(tap((responseAccount) => {
         this.accounts = this.accounts.map(a => a.id === id ? Object.assign(a, updatedAccount) : a);
+        this.calculateTotalAccountBalance();
       }));
   }
 
   deleteAccount(account: Account | number) {
     const id = typeof account === 'number' ? account : account.id;
-    return this.backend.deleteAccount(id);
+    return this.backend.deleteAccount(id)
+      .pipe(tap(() => this.calculateTotalAccountBalance()));
   }
 
   /**
@@ -56,6 +78,7 @@ export class GlanceactionService {
       .pipe(tap((t) => {
         this.transactions.push(t);
         this.sortTransactions();
+        this.calculateTotalAccountBalance();
       }));
   }
 
@@ -65,13 +88,18 @@ export class GlanceactionService {
       .pipe(tap((responseTransaction) => {
         this.transactions = this.transactions.map(t => t.id === id ? Object.assign(t, updatedTransaction) : t);
         this.sortTransactions();
+        this.calculateTotalAccountBalance();
       }));
   }
 
   deleteTransaction(transaction: Transaction | number) {
     const id = typeof transaction === 'number' ? transaction : transaction.id;
+
     return this.backend.deleteTransaction(id)
-      .pipe(tap(() => this.transactions = this.transactions.filter(t => t.id !== id)));
+      .pipe(tap(() => {
+        this.transactions = this.transactions.filter(t => t.id !== id);
+        this.calculateTotalAccountBalance();
+      }));
   }
 
   sortTransactions() {

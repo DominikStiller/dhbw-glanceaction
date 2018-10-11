@@ -82,11 +82,16 @@ class FormModel {
 
   static fromTransaction(t: Transaction, dateParser: NgbDateParserFormatter, datePipe: DatePipe): FormModel {
     let recurrenceType = RecurrenceType.Custom;
-    if (t.recurrence === 0) {
+    let recurrenceInterval = t.recurrence.charAt(0);
+    if (recurrenceInterval === '0') {
       recurrenceType = RecurrenceType.None;
     }
-    if (t.recurrence === 7) {
+    if (recurrenceInterval === '7') {
       recurrenceType = RecurrenceType.Weekly;
+    }
+    if (recurrenceInterval === 'm') {
+      recurrenceType = RecurrenceType.Monthly;
+      recurrenceInterval = 30;
     }
     return {
       amount: t.amount,
@@ -96,10 +101,8 @@ class FormModel {
       timestampTime: datePipe.transform(new Date(t.timestamp), 'HH:mm'),
       notes: t.notes,
       recurrenceType: recurrenceType,
-      recurrenceInterval: t.recurrence,
-      recurrenceAmount: 0,
-      // recurrenceInterval: Number(t.recurrence.charAt(0)),
-      // recurrenceAmount: Number(t.recurrence.charAt(2)),
+      recurrenceInterval: Number(recurrenceInterval),
+      recurrenceAmount: Number(t.recurrence.charAt(2)),
     };
   }
 
@@ -111,6 +114,10 @@ class FormModel {
       Number(model.timestampTime.substr(0, 2)),
       Number(model.timestampTime.substring(3)),
     );
+    let recurrenceInterval = model.recurrenceInterval;
+    if (model.recurrenceType === RecurrenceType.Monthly) {
+      recurrenceInterval = 'm';
+    }
 
     return {
       amount: model.amount,
@@ -118,8 +125,7 @@ class FormModel {
       account: Number(model.account),
       timestamp: timestamp.toISOString(),
       notes: model.notes,
-      recurrence: model.recurrenceAmount,
-      // recurrence: `${model.recurrenceInterval} ${model.recurrenceAmount}`,
+      recurrence: `${recurrenceInterval} ${model.recurrenceAmount}`,
     };
   }
 

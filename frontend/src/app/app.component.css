@@ -1,4 +1,7 @@
 #app-container {
   margin: 8em auto 2em;
-  padding: 0 2em;
+}
+
+.text-large {
+  font-size: 150%;
 }
