@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign,arrow-body-style */
 const express = require('express');
 const util = require('util');
 const { check, validationResult } = require('express-validator/check');
@@ -6,6 +7,7 @@ const { db } = require('../database');
 const transactions = db.collection('Transactions');
 const categories = db.collection('Categories');
 const accounts = db.collection('Accounts');
+const transactionKeys = ['amount', 'category', 'account', 'timestamp', 'notes', 'recurrence'];
 
 const router = express.Router();
 
@@ -85,6 +87,13 @@ router.post('/transactions', [
 ], (req, res) => {
   util.log(util.format('/api/transactions/ - POST - Request: %j', req.body));
 
+  const keys = Object.keys(req.body);
+  for (let i = 0; i < keys.length; i++) {
+    if (transactionKeys.indexOf(keys[i]) < 0) {
+      return res.status(404).json({ error: { name: 'TransactionInvalidFieldError', message: 'The transaction may only contain the specified fields' } });
+    }
+  }
+
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ error: { name: 'TransactionVerificationError', message: errors.array()[0].msg } });
@@ -151,6 +160,13 @@ router.put('/transactions/:id([0-9]+)', [
     .matches(/^(([1-9][0-9]*|0)|m)( )([1-9][0-9]*|0)$/)
     .withMessage('Invalid recurrence value'),
 ], (req, res) => {
+  const keys = Object.keys(req.body);
+  for (let i = 0; i < keys.length; i++) {
+    if (transactionKeys.indexOf(keys[i]) < 0) {
+      return res.status(404).json({ error: { name: 'TransactionInvalidFieldError', message: 'The transaction may only contain the specified fields' } });
+    }
+  }
+
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ error: { name: 'TransactionVerificationError', message: errors.array()[0].msg } });
@@ -184,7 +200,7 @@ router.put('/transactions/:id([0-9]+)', [
         return res.status(500).send();
       }
       transactions.findOne({ _id: transactionId }, (nextErr, updatedResult) => {
-        res.status(201).send(changeIdOfTransaction(updatedResult));
+        return res.status(201).send(changeIdOfTransaction(updatedResult));
       });
     });
   });
@@ -199,13 +215,13 @@ router.delete('/transactions/:id([0-9]+)', (req, res) => {
       return res.status(500).send();
     }
     if (!transaction) {
-      return res.status(404).json({ error: { name: 'TransactionUndefinedError', message: 'The transaction to be deleted doesn\'t exist'}});
+      return res.status(404).json({ error: { name: 'TransactionUndefinedError', message: 'The transaction to be deleted doesn\'t exist' } });
     }
     transactions.remove({ _id: transactionId }, (innerErr) => {
       if (innerErr) {
         return res.status(500).send();
       }
-      res.status(204).send('Success');
+      return res.status(204).send('Success');
     });
   });
 });
