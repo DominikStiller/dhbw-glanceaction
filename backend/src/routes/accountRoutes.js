@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const express = require('express');
 const util = require('util');
 const { check, validationResult } = require('express-validator/check');
@@ -5,6 +6,7 @@ const { db } = require('../database');
 
 const accounts = db.collection('Accounts');
 const transactions = db.collection('Transactions');
+const accountKeys = ['name', 'initialBalance'];
 
 const router = express.Router();
 
@@ -44,10 +46,18 @@ router.post('/accounts', [
 ], (req, res) => {
   util.log(util.format('/api/accounts/ - POST - Request: %j', req.body));
 
+  const keys = Object.keys(req.body);
+  for (let i = 0; i < keys.length; i++) {
+    if (accountKeys.indexOf(keys[i]) < 0) {
+      return res.status(404).json({ error: { name: 'AccountInvalidFieldError', message: 'The account may only contain the specified fields' } });
+    }
+  }
+
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ error: { name: 'AccountValidationError', message: errors.array()[0].msg } });
   }
+
   accounts.insert(req.body, (error, result) => {
     accounts.findOne(result, (innerError, updatedResult) => {
       res.status(201).send(changeIdOfAccount(updatedResult));
@@ -70,6 +80,14 @@ router.put('/accounts/:id([0-9]+)', [
     .isFloat()
     .withMessage('Invalid initial balance'),
 ], (req, res) => {
+
+  const keys = Object.keys(req.body);
+  for (let i = 0; i < keys.length; i++) {
+    if (accountKeys.indexOf(keys[i]) < 0) {
+      return res.status(404).json({ error: { name: 'AccountInvalidFieldError', message: 'The account may only contain the specified fields' } });
+    }
+  }
+
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ error: { name: 'AccountValidationError', message: errors.array()[0].msg } });

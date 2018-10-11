@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign,arrow-body-style */
 const express = require('express');
 const util = require('util');
 const { check, validationResult } = require('express-validator/check');
@@ -5,6 +6,7 @@ const { db } = require('../database');
 
 const categories = db.collection('Categories');
 const transactions = db.collection('Transactions');
+const categoryKeys = ['name', 'color'];
 
 const router = express.Router();
 
@@ -55,9 +57,16 @@ router.post('/categories', [
 ], (req, res) => {
   util.log(util.format('/api/categories/ - POST - Request: %j', req.body));
 
+  const keys = Object.keys(req.body);
+  for (let i = 0; i < keys.length; i++) {
+    if (categoryKeys.indexOf(keys[i]) < 0) {
+      return res.status(404).json({ error: { name: 'CategoryInvalidFieldError', message: 'The category may only contain the specified fields' } });
+    }
+  }
+
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ error: { name: 'CategoryValidationError', message: errors.array()[0].msg} });
+    return res.status(400).json({ error: { name: 'CategoryValidationError', message: errors.array()[0].msg } });
   }
 
   categories.insert(req.body, (error, result) => {
@@ -91,8 +100,15 @@ router.put('/categories/:name([a-zA-Z0-9]+)', [
     }),
   check('color')
     .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/)
-    .withMessage('Color must be a valid hexadecimal color starting with #')
+    .withMessage('Color must be a valid hexadecimal color starting with #'),
 ], (req, res) => {
+  const keys = Object.keys(req.body);
+  for (let i = 0; i < keys.length; i++) {
+    if (categoryKeys.indexOf(keys[i]) < 0) {
+      return res.status(404).json({ error: { name: 'CategoryInvalidFieldError', message: 'The category may only contain the specified fields' } });
+    }
+  }
+
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ error: { name: 'CategoryValidationError', message: errors.array()[0].msg } });
