@@ -1,8 +1,8 @@
 {
   "extends": "airbnb-base",
   "rules": {
-    "max-line-length": [
-      true,
+    "max-len": [
+      2,
       180
     ],
     "no-underscore-dangle": 0

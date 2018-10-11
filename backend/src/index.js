@@ -26,13 +26,13 @@ app.use('/api', require('./routes/categoryRoutes'));
 app.use('/api', require('./routes/transactionRoutes'));
 
 // Fallback for unsupported requests
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
   util.log(util.format('ERROR: Unsupported request: URL=%s, Method=%s', req.url, req.method));
   next();
 });
 
 const server = http.createServer(app);
-server.listen(4000, function () {
+server.listen(4000, () => {
   const { port } = server.address();
   util.log(util.format('Web Server listening at http://localhost:%s', port));
 });
