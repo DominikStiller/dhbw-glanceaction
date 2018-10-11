@@ -25,3 +25,15 @@
 {"k":"0000000078","o":"0000000164","v":"001"}
 {"_id":7,"_uid":7,"_dt":1538922328014,"_s":"3dcd6c79777c9d7369fa8e260c859215"}
 {"name":"Bestechungsgeld Web-Engineering","amount":"100.00","category":"DHBW","recurrence":"0","account":"15","timestamp":"2018-01-01","_id":{"$wrap":"$oid","v":7}}
+{"k":"0000000078","o":"0000000149","v":"001"}
+{"_id":4,"_uid":7,"_dt":1539251510536,"_s":"6dc1bc1362dd5931b152bbd65676899c"}
+{"name":"Einkauf","amount":"14.37","category":"Lebensmittel","recurrence":"0 0","account":"14","timestamp":"2018-01-01","_id":{"$wrap":"$oid","v":4}}
+{"k":"0000000078","o":"0000000150","v":"001"}
+{"_id":4,"_uid":7,"_dt":1539251554434,"_s":"6dde495d4eebad7a95492691f9603b74"}
+{"name":"Einkauf","amount":"14.37","category":"Lebensmittel","recurrence":"m 23","account":"14","timestamp":"2018-01-01","_id":{"$wrap":"$oid","v":4}}
+{"k":"0000000078","o":"0000000177","v":"001"}
+{"_id":4,"_uid":7,"_dt":1539251598787,"_s":"897d8987415ecf55fa3ebd90e5d7efbc"}
+{"name":"Einkauf","amount":"14.37","category":"Lebensmittel","recurrence":"m 23","account":"14","timestamp":"2018-01-01","_id":{"$wrap":"$oid","v":4},"notes":"Lidl lohnt sich."}
+{"k":"0000000078","o":"0000000176","v":"001"}
+{"_id":4,"_uid":7,"_dt":1539251620272,"_s":"205870c4006a46dadad45ad0fe62d2d0"}
+{"name":"Einkauf","amount":"14.37","category":"Lebensmittel","recurrence":"m 23","account":"14","timestamp":"2018-01-01","_id":{"$wrap":"$oid","v":4},"notes":"Lidl lohnt sich"}

@@ -1,24 +1,25 @@
 const express = require('express');
-const db = require('../database').db;
 const util = require('util');
 const { check, validationResult } = require('express-validator/check');
+const { db } = require('../database');
+
 const accounts = db.collection('Accounts');
 const transactions = db.collection('Transactions');
 
 const router = express.Router();
 
 function changeIdOfAccount(account) {
-    let listAccount = account;
-    listAccount.id = listAccount._id;
-    delete listAccount._id;
-    return listAccount;
+  const listAccount = account;
+  listAccount.id = listAccount._id;
+  delete listAccount._id;
+  return listAccount;
 }
 
 function handleInitialBalance(newAccount) {
-    let listAccount = newAccount;
-    listAccount.balance = listAccount.initialBalance;
-    delete listAccount.initialBalance;
-    return listAccount;
+  const listAccount = newAccount;
+  listAccount.balance = listAccount.initialBalance;
+  delete listAccount.initialBalance;
+  return listAccount;
 }
 
 // REST Endpoints //
@@ -56,12 +57,13 @@ router.post('/accounts', [
 
     handleInitialBalance(req.body);
     accounts.insert(req.body, function (error, result) {
-        accounts.findOne(result, function (error, result) {
-            res.status(201).send(changeIdOfAccount(result));
+        accounts.findOne(result, function (error, updatedResult) {
+            res.status(201).send(changeIdOfAccount(updatedResult));
         });
     });
 });
 
+// TODO return result from PUT request as well
 router.put('/accounts/:id([0-9]+)', [
         check('name')
             .not()
