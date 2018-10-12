@@ -13,7 +13,8 @@ import { Recurrence, RecurrenceType } from '../../models/recurrence';
 })
 export class CreateEditTransactionDialogComponent implements OnInit {
 
-  RecurrenceType = RecurrenceType;
+  // Redeclare so we can use this enum type in the template
+  recurrenceType = RecurrenceType;
 
   @Input() transactionId: number;
   @ViewChild('domForm') domForm: ElementRef;
@@ -35,7 +36,7 @@ export class CreateEditTransactionDialogComponent implements OnInit {
   ngOnInit() {
     this.creationMode = this.transactionId === null;
     if (this.creationMode) {
-      this.model = new FormModel(this.ngbCalendar, this.datePipe);
+      this.model = new FormModel(this.g, this.ngbCalendar, this.datePipe);
     } else {
       this.model = FormModel.fromTransaction(this.g.getTransaction(this.transactionId), this.ngbDateParser, this.datePipe);
     }
@@ -75,8 +76,12 @@ class FormModel {
   recurrenceInterval: number = 0;
   recurrenceAmount: number = 10;
 
-  constructor(ngbCalendar: NgbCalendar, datePipe: DatePipe) {
-    // TODO select default account
+  constructor(g: GlanceactionService,
+              ngbCalendar: NgbCalendar,
+              datePipe: DatePipe) {
+    if (g.accounts[0]) {
+      this.account = g.accounts[0].id;
+    }
     this.timestampDate = ngbCalendar.getToday();
     this.timestampTime = datePipe.transform(new Date(), 'HH:mm');
   }

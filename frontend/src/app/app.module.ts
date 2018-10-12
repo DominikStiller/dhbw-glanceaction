@@ -13,6 +13,7 @@ import { DatePipe } from '@angular/common';
 import { RecurrencePipe } from './pipes/recurrence.pipe';
 import { SortTransactionsPipe } from './pipes/sort-transactions.pipe';
 import { TotalAccountBalancePipe } from './pipes/total-account-balance.pipe';
+import { EmptyPipe } from './pipes/empty.pipe';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { TotalAccountBalancePipe } from './pipes/total-account-balance.pipe';
     RecurrencePipe,
     SortTransactionsPipe,
     TotalAccountBalancePipe,
+    EmptyPipe,
   ],
   imports: [
     BrowserModule,

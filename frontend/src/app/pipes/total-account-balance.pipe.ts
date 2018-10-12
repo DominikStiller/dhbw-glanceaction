@@ -11,7 +11,7 @@ export class TotalAccountBalancePipe implements PipeTransform {
   }
 
   transform(transactions: Transaction[]): number {
-    if (transactions === undefined || this.g.accounts === undefined) {
+    if (this.g.accounts === undefined) {
       return 0;
     }
     let totalAccountBalance = this.g.accounts

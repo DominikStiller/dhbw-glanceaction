@@ -86,22 +86,22 @@
           <select
             class="form-control custom-select" formControlName="recurrenceType" id="input-repeat"
             required>
-            <option [value]="RecurrenceType.None">
+            <option [value]="recurrenceType.None">
               No repeat
             </option>
-            <option [value]="RecurrenceType.Weekly">
+            <option [value]="recurrenceType.Weekly">
               Weekly
             </option>
-            <option [value]="RecurrenceType.Monthly">
+            <option [value]="recurrenceType.Monthly">
               Monthly
             </option>
-            <option [value]="RecurrenceType.Custom">
+            <option [value]="recurrenceType.Custom">
               Custom
             </option>
           </select>
         </div>
         <div class="input-group col"
-             *ngIf="form.value.recurrenceType === RecurrenceType.Custom">
+             *ngIf="form.value.recurrenceType === recurrenceType.Custom">
           <div class="input-group-prepend">
             <span class="input-group-text">Every</span>
           </div>
@@ -113,7 +113,7 @@
         </div>
       </div>
       <div class="input-group col-10 offset-2 col-lg-3 offset-lg-0"
-           *ngIf="form.value.recurrenceType !== RecurrenceType.None">
+           *ngIf="form.value.recurrenceType !== recurrenceType.None">
         <input type="number"
                class="form-control" formControlName="recurrenceAmount">
         <div class="input-group-append">
