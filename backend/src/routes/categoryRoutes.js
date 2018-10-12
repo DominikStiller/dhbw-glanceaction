@@ -58,7 +58,7 @@ router.post('/categories', [
   util.log(util.format('/api/categories/ - POST - Request: %j', req.body));
 
   const keys = Object.keys(req.body);
-  for (let i = 0; i < keys.length; i++) {
+  for (let i = 0; i < keys.length; i += 1) {
     if (categoryKeys.indexOf(keys[i]) < 0) {
       return res.status(404).json({ error: { name: 'CategoryInvalidFieldError', message: 'The category may only contain the specified fields' } });
     }
@@ -103,7 +103,7 @@ router.put('/categories/:name([a-zA-Z0-9]+)', [
     .withMessage('Color must be a valid hexadecimal color starting with #'),
 ], (req, res) => {
   const keys = Object.keys(req.body);
-  for (let i = 0; i < keys.length; i++) {
+  for (let i = 0; i < keys.length; i += 1) {
     if (categoryKeys.indexOf(keys[i]) < 0) {
       return res.status(404).json({ error: { name: 'CategoryInvalidFieldError', message: 'The category may only contain the specified fields' } });
     }
