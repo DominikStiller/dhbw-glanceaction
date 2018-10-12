@@ -1,23 +1,24 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { NewTransaction, Transaction } from '../../models/transaction';
 import { GlanceactionService } from '../../services/glanceaction.service';
-import { NgbActiveModal, NgbDateStruct, NgbCalendar, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct, NgbCalendar, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { DatePipe } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { Recurrence, RecurrenceType } from '../../models/recurrence';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-create-edit-transaction-dialog',
-  templateUrl: './create-edit-transaction-dialog.component.html',
-  styleUrls: ['./create-edit-transaction-dialog.component.scss'],
+  selector: 'app-create-edit-transaction',
+  templateUrl: './create-edit-transaction.component.html',
+  styleUrls: ['./create-edit-transaction.component.scss'],
 })
-export class CreateEditTransactionDialogComponent implements OnInit {
+export class CreateEditTransactionComponent implements OnInit {
 
   // Redeclare so we can use this enum type in the template
   recurrenceType = RecurrenceType;
 
-  @Input() transactionId: number;
-  @ViewChild('domForm') domForm: ElementRef;
+  @ViewChild('domForm') formDomElement: ElementRef;
+  private transactionId: number;
   private model: FormModel;
   creationMode: boolean;
 
@@ -26,26 +27,30 @@ export class CreateEditTransactionDialogComponent implements OnInit {
   form: FormGroup;
 
   constructor(private g: GlanceactionService,
-              public activeModal: NgbActiveModal,
               private fb: FormBuilder,
               private ngbCalendar: NgbCalendar,
               private ngbDateParser: NgbDateParserFormatter,
-              private datePipe: DatePipe) {
+              private datePipe: DatePipe,
+              private route: ActivatedRoute,
+              public location: Location) {
   }
 
   ngOnInit() {
-    this.creationMode = this.transactionId === null;
-    if (this.creationMode) {
-      this.model = new FormModel(this.g, this.ngbCalendar, this.datePipe);
-    } else {
-      this.model = FormModel.fromTransaction(this.g.getTransaction(this.transactionId), this.ngbDateParser, this.datePipe);
-    }
-
+    this.model = new FormModel(this.g, this.ngbCalendar, this.datePipe);
     this.form = this.fb.group(this.model);
+    this.route.data.subscribe((data) => {
+      const t = data.t;
+      this.creationMode = t === null;
+      if (!this.creationMode) {
+        this.transactionId = t.id;
+        this.model = FormModel.fromTransaction(t, this.ngbDateParser, this.datePipe);
+        this.form = this.fb.group(this.model);
+      }
+    });
   }
 
   submit() {
-    if (!this.domForm.nativeElement.checkValidity()) {
+    if (!this.formDomElement.nativeElement.checkValidity()) {
       this.displayValidation = true;
       event.preventDefault();
       event.stopPropagation();
@@ -54,14 +59,14 @@ export class CreateEditTransactionDialogComponent implements OnInit {
 
     const newTransaction = FormModel.toNewTransaction(Object.assign({}, this.form.value));
     if (this.creationMode) {
-      this.g.createTransaction(newTransaction).subscribe(() => this.activeModal.close());
+      this.g.createTransaction(newTransaction).subscribe(() => this.location.back());
     } else {
-      this.g.updateTransaction(this.transactionId, newTransaction).subscribe(() => this.activeModal.close());
+      this.g.updateTransaction(this.transactionId, newTransaction).subscribe(() => this.location.back());
     }
   }
 
   delete() {
-    this.g.deleteTransaction(this.transactionId).subscribe(() => this.activeModal.close());
+    this.g.deleteTransaction(this.transactionId).subscribe(() => this.location.back());
   }
 }
 
@@ -79,7 +84,7 @@ class FormModel {
   constructor(g: GlanceactionService,
               ngbCalendar: NgbCalendar,
               datePipe: DatePipe) {
-    if (g.accounts[0]) {
+    if (g.accounts.length > 0) {
       this.account = g.accounts[0].id;
     }
     this.timestampDate = ngbCalendar.getToday();

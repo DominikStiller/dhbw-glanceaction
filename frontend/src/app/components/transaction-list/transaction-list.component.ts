@@ -2,8 +2,9 @@ import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { GlanceactionService } from '../../services/glanceaction.service';
 import { Transaction } from '../../models/transaction';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CreateEditTransactionDialogComponent }
-  from '../create-edit-transaction-dialog/create-edit-transaction-dialog.component';
+import { CreateEditTransactionComponent }
+  from '../create-edit-transaction/create-edit-transaction.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-transaction-list',
@@ -13,19 +14,19 @@ import { CreateEditTransactionDialogComponent }
 export class TransactionListComponent implements OnInit {
   searchTerm: string = '';
 
-  constructor(public g: GlanceactionService, private modalService: NgbModal) {
+  constructor(public g: GlanceactionService,
+              private modalService: NgbModal,
+              private router: Router) {
   }
 
   ngOnInit() {
   }
 
   createTransaction() {
-    const modalRef = this.modalService.open(CreateEditTransactionDialogComponent, { size: 'lg' });
-    modalRef.componentInstance.transactionId = null;
+    this.router.navigate(['/create']);
   }
 
   editTransaction(t: Transaction) {
-    const modalRef = this.modalService.open(CreateEditTransactionDialogComponent, { size: 'lg' });
-    modalRef.componentInstance.transactionId = t.id;
+    this.router.navigate(['/edit', t.id]);
   }
 }

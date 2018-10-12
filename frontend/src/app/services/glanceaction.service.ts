@@ -4,26 +4,33 @@ import { NewTransaction, Transaction, UpdateTransaction } from '../models/transa
 import { Category, UpdateCategory } from '../models/category';
 import { Account, NewAccount, UpdateAccount } from '../models/account';
 import { tap } from 'rxjs/operators';
-import { Observable, forkJoin } from 'rxjs';
+import { Subject, forkJoin } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GlanceactionService {
 
-  accounts: Account[];
+  accounts: Account[] = [];
   transactions: Transaction[] = [];
-  categories: Category[];
+  categories: Category[] = [];
+
+  dataLoaded = false;
+  dataLoaded$ = new Subject();
 
   constructor(private backend: BackendService) {
     forkJoin(
       backend.getAccounts(),
       backend.getTransactions(),
+      backend.getCategories(),
     ).subscribe((res) => {
       this.accounts = res[0];
       this.transactions = res[1];
+      this.categories = res[2];
+
+      this.dataLoaded = true;
+      this.dataLoaded$.next(true);
     });
-    backend.getCategories().subscribe(d => this.categories = d);
   }
 
   /**

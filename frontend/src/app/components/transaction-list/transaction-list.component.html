@@ -28,6 +28,7 @@
     <strong class="col text-right text-large">{{ g.transactions | empty | totalAccountBalance | currency:'EUR' }}</strong>
   </div>
 </div>
+<!-- TODO category colors as left border -->
 <div *ngFor="let t of (g.transactions | searchFilter:searchTerm | recurrence | sortTransactions)"
      class="row transaction" (click)="editTransaction(t)">
   <span class="col-2 col-md-3">
