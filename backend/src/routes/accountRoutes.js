@@ -1,133 +1,142 @@
+/* eslint-disable no-param-reassign */
 const express = require('express');
-const db = require('../database').db;
 const util = require('util');
 const { check, validationResult } = require('express-validator/check');
+const { db } = require('../database');
+
 const accounts = db.collection('Accounts');
 const transactions = db.collection('Transactions');
+const accountKeys = ['name', 'initialBalance'];
 
 const router = express.Router();
 
-function changeIdOfAccount(account) {
-    let listAccount = account;
-    listAccount.id = listAccount._id;
-    delete listAccount._id;
-    return listAccount;
-}
+// Formatting Functions //
 
-function handleInitialBalance(newAccount) {
-    let listAccount = newAccount;
-    listAccount.balance = listAccount.initialBalance;
-    delete listAccount.initialBalance;
-    return listAccount;
+function changeIdOfAccount(account) {
+  const listAccount = account;
+  listAccount.id = listAccount._id;
+  delete listAccount._id;
+  return listAccount;
 }
 
 // REST Endpoints //
 
-router.get('/accounts', function(req, res){
-    accounts.find().toArray(function (error, list) {
-        list.forEach(function (account, index, accArr) {
-            accArr[index] = changeIdOfAccount(account);
-        });
-        res.json(list);
+router.get('/accounts', (req, res) => {
+  accounts.find().toArray((error, list) => {
+    list.forEach((account, index, accArr) => {
+      accArr[index] = changeIdOfAccount(account);
     });
+    res.json(list);
+  });
 });
 
 router.post('/accounts', [
-        check('name')
-            .not()
-            .isEmpty()
-            .withMessage('Name may not be empty')
-            .matches(/^[a-zA-Z].*/)
-            .withMessage('Name must start with a letter'),
-        check('initialBalance')
-            .not()
-            .isEmpty()
-            .withMessage('Initial balance may not be empty')
-            .isFloat()
-            .withMessage('Invalid initial balance')
-    ], function (req, res) {
+  check('name')
+    .not()
+    .isEmpty()
+    .withMessage('Name may not be empty')
+    .matches(/^[a-zA-Z].*/)
+    .withMessage('Name must start with a letter'),
+  check('initialBalance')
+    .not()
+    .isEmpty()
+    .withMessage('Initial balance may not be empty')
+    .isFloat()
+    .withMessage('Invalid initial balance'),
+], (req, res) => {
+  util.log(util.format('/api/accounts/ - POST - Request: %j', req.body));
 
-    util.log(util.format('/api/accounts/ - POST - Request: %j', req.body));
-
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ error: {name: "AccountValidationError", message: errors.array()[0].msg} });
+  const keys = Object.keys(req.body);
+  for (let i = 0; i < keys.length; i += 1) {
+    if (accountKeys.indexOf(keys[i]) < 0) {
+      return res.status(404).json({ error: { name: 'AccountInvalidFieldError', message: 'The account may only contain the specified fields' } });
     }
+  }
 
-    handleInitialBalance(req.body);
-    accounts.insert(req.body, function (error, result) {
-        accounts.findOne(result, function (error, result) {
-            res.status(201).send(changeIdOfAccount(result));
-        });
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ error: { name: 'AccountValidationError', message: errors.array()[0].msg } });
+  }
+
+  accounts.insert(req.body, (error, result) => {
+    accounts.findOne(result, (innerError, updatedResult) => {
+      res.status(201).send(changeIdOfAccount(updatedResult));
     });
+  });
 });
+
 
 router.put('/accounts/:id([0-9]+)', [
-        check('name')
-            .not()
-            .isEmpty()
-            .withMessage('Name may not be empty')
-            .matches(/^[a-zA-Z].*/)
-            .withMessage('Name must start with a letter'),
-        check('initialBalance')
-            .not()
-            .isEmpty()
-            .withMessage('Initial balance may not be empty')
-            .isFloat()
-            .withMessage('Invalid initial balance')
-    ], function (req, res) {
-
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ error: {name: "AccountValidationError", message: errors.array()[0].msg} });
+  check('name')
+    .not()
+    .isEmpty()
+    .withMessage('Name may not be empty')
+    .matches(/^[a-zA-Z].*/)
+    .withMessage('Name must start with a letter'),
+  check('initialBalance')
+    .not()
+    .isEmpty()
+    .withMessage('Initial balance may not be empty')
+    .isFloat()
+    .withMessage('Invalid initial balance'),
+], (req, res) => {
+  const keys = Object.keys(req.body);
+  for (let i = 0; i < keys.length; i += 1) {
+    if (accountKeys.indexOf(keys[i]) < 0) {
+      return res.status(404).json({ error: { name: 'AccountInvalidFieldError', message: 'The account may only contain the specified fields' } });
     }
+  }
 
-    let newName = req.body.name;
-    let newBalance = req.body.initialBalance;
-    let accountId = req.params.id;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ error: { name: 'AccountValidationError', message: errors.array()[0].msg } });
+  }
 
-    accounts.findOne({_id:accountId}, function(err, account){
-        if(err) {
-            return res.status(500).send();
-        }
-        if(!Boolean(account)) {
-            return res.status(404).json({ error: {name: "AccountUndefinedError", message: "The account to be changed doesn't exist"}});
-        } else {
-            accounts.update({_id: accountId}, {$set: {name: newName, balance: newBalance}}, function (err, account) {
-                if (err) {
-                    return res.status(500).send();
-                }
-                res.status(204).send("Success");
-            });
-        }
+  const newName = req.body.name;
+  const newBalance = req.body.initialBalance;
+  const accountId = req.params.id;
+
+  accounts.findOne({ _id: accountId }, (err, account) => {
+    if (err) {
+      return res.status(500).send();
+    }
+    if (!account) {
+      return res.status(404).json({ error: { name: 'AccountUndefinedError', message: "The account to be changed doesn't exist" } });
+    }
+    accounts.update({ _id: accountId }, { $set: { name: newName, initialBalance: newBalance } }, (innerErr) => {
+      if (innerErr) {
+        return res.status(500).send();
+      }
+      accounts.findOne({ _id: accountId }, (nextErr, updatedResult) => {
+        res.status(201).send(changeIdOfAccount(updatedResult));
+      });
     });
-
+  });
 });
 
-router.delete('/accounts/:id([0-9]+)', function(req, res){
-    let accountId = req.params.id;
+router.delete('/accounts/:id([0-9]+)', (req, res) => {
+  const accountId = req.params.id;
 
-    // Deleting an account also deleted all transactions associated with this account. User confirmation in frontend!
-    accounts.findOne({_id:accountId}, function(err, account){
-        if(err) {
-            return res.status(500).send();
+  // Deleting an account also deleted all transactions associated with this account. User confirmation in frontend!
+  accounts.findOne({ _id: accountId }, (err, account) => {
+    if (err) {
+      return res.status(500).send();
+    }
+    if (!account) {
+      return res.status(404).json({ error: { name: 'AccountUndefinedError', message: "The account to be deleted doesn't exist" } });
+    }
+    transactions.remove({ account: accountId }, (innerErr) => {
+      if (innerErr) {
+        return res.status(500).send();
+      }
+      accounts.findAndRemove({ _id: accountId }, (nextErr) => {
+        if (nextErr) {
+          return res.status(500).send();
         }
-        if(!Boolean(account)) {
-            return res.status(404).json({ error: {name: "AccountUndefinedError", message: "The account to be deleted doesn't exist"}});
-        } else {
-            transactions.remove({account: accountId}, function(err, resTransactions) {
-                if (err) {
-                    return res.status(500).send();
-                }
-                accounts.findAndRemove({_id:accountId}, function(err, accountDel){
-                    if (err) {
-                        return res.status(500).send();
-                    }
-                    res.status(204).send("Success");
-                });
-            });
-        }
+        res.status(204).send('Success');
+      });
     });
+  });
 });
 
 module.exports = router;

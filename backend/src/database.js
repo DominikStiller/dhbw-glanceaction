@@ -1,6 +1,6 @@
-var tingodb = require('tingodb')();
-var path = require('path');
+const tingodb = require('tingodb')();
+const path = require('path');
 
-var db = new tingodb.Db(path.join(__dirname, '/database'), {});
+const db = new tingodb.Db(path.join(__dirname, '/database'), {});
 
 exports.db = db;
