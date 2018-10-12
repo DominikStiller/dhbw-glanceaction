@@ -17,25 +17,52 @@
   </button>
 </nav>
 
-<!-- TODO Account information header -->
+<h3 *ngIf="searchTerm && (g.transactions | searchFilter:searchTerm).length !== 0">
+  {{ (g.transactions | recurrence | searchFilter:searchTerm).length }} search results
+  <small class="text-muted">for "{{ searchTerm }}"</small>
+</h3>
 
-<div>
-  <div *ngFor="let t of (g.transactions | searchFilter:searchTerm)" class="row transaction" (click)="editTransaction(t)">
-  <span class="col-2 col-lg-1">
-    {{ t.timestamp | date:'MMM d' }}
+<div class="row" *ngIf="!searchTerm">
+  <div class="text-right w-100">
+    <span class="text-muted">Beginning Balance:</span>
+    <strong class="col text-right text-large">{{ g.transactions | empty | totalAccountBalance | currency:'EUR' }}</strong>
+  </div>
+</div>
+<!-- TODO category colors as left border -->
+<div *ngFor="let t of (g.transactions | searchFilter:searchTerm | recurrence | sortTransactions)"
+     class="row transaction" (click)="editTransaction(t)">
+  <span class="col-2 col-md-3">
+    <span class="d-none d-md-inline">{{ t.timestamp | date:'longDate' }}</span>
+    <span class="d-md-none">{{ t.timestamp | date:'MMM d' }}</span>
     <br>
     {{ t.timestamp | date:'HH:mm' }}
   </span>
-    <span class="col-2">
-    {{ t.account | accountName }}
+  <span class="col col-lg-2">
+    {{ t.category }}
+    <div class="d-md-none">
+      {{ t.notes }}
+    </div>
   </span>
-    <span class="col">
+  <span class="col d-none d-md-inline">
     {{ t.notes }}
   </span>
-    <span class="col-1">
-      <br>
-    {{ t.amount | currency:'EUR' }}
+  <span class="col-4 col-lg-2 text-right">
+    <small class="text-muted">{{ t.account | accountName }}</small>
+    <br>
+    <span [class.text-success]="t.amount > 0" [class.text-danger]="t.amount < 0">{{ t.amount | currency:'EUR' }}</span>
   </span>
+</div>
+<div *ngIf="!searchTerm && g.transactions.length === 0" class="text-muted">
+  No transactions found.
+</div>
+<div *ngIf="searchTerm && (g.transactions | searchFilter:searchTerm).length === 0" class="text-muted">
+  No transactions matching "{{ searchTerm }}" found. Create one by clicking the <span class="oi oi-plus"></span> in the upper
+  right corner.
+</div>
+<hr class="double-line" *ngIf="!searchTerm">
+<div class="row" *ngIf="!searchTerm">
+  <div class="text-right w-100">
+    <span class="text-muted">Ending Balance:</span>
+    <strong class="col text-large">{{ g.transactions | recurrence | totalAccountBalance | currency:'EUR' }}</strong>
   </div>
 </div>
-<!-- TODO Sum -->

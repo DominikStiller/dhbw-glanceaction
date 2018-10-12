@@ -2,10 +2,14 @@
 
 .transaction {
   padding: 10px 0;
-  margin: 10px 0;
   cursor: pointer;
 
   &:hover {
     background-color: $smoke;
   }
+}
+
+hr.double-line {
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  height: 4px;
 }

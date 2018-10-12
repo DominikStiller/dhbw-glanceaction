@@ -6,10 +6,14 @@ import { Transaction } from '../models/transaction';
 })
 export class SearchFilterPipe implements PipeTransform {
 
-  transform(transactions: Transaction[], term: string): any {
-    if (!term) {
+  transform(transactions: Transaction[], searchTerm: string): Transaction[] {
+    if (!searchTerm) {
       return transactions;
     }
-    // TODO Implement search filter
+
+    const s = searchTerm.toLowerCase();
+    return transactions.filter((t) => {
+      return t.category.toLowerCase().includes(s) || t.notes.toLowerCase().includes(s);
+    });
   }
 }

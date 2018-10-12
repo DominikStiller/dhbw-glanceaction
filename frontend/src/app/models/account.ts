@@ -2,16 +2,13 @@ export class Account {
   id: number;
   name: string;
   /**
-   * Account balance in Euro
+   * Initial account balance in Euro
    */
-  balance: number;
+  initialBalance: number;
 }
 
 export interface NewAccount {
   name: string;
-  /**
-   * Initial account balance in Euro
-   */
   initialBalance: number;
 }
 
