@@ -47,7 +47,7 @@ router.post('/accounts', [
   util.log(util.format('/api/accounts/ - POST - Request: %j', req.body));
 
   const keys = Object.keys(req.body);
-  for (let i = 0; i < keys.length; i++) {
+  for (let i = 0; i < keys.length; i += 1) {
     if (accountKeys.indexOf(keys[i]) < 0) {
       return res.status(404).json({ error: { name: 'AccountInvalidFieldError', message: 'The account may only contain the specified fields' } });
     }
@@ -80,9 +80,8 @@ router.put('/accounts/:id([0-9]+)', [
     .isFloat()
     .withMessage('Invalid initial balance'),
 ], (req, res) => {
-
   const keys = Object.keys(req.body);
-  for (let i = 0; i < keys.length; i++) {
+  for (let i = 0; i < keys.length; i += 1) {
     if (accountKeys.indexOf(keys[i]) < 0) {
       return res.status(404).json({ error: { name: 'AccountInvalidFieldError', message: 'The account may only contain the specified fields' } });
     }

@@ -7,7 +7,7 @@ const { db } = require('../database');
 const transactions = db.collection('Transactions');
 const categories = db.collection('Categories');
 const accounts = db.collection('Accounts');
-const transactionKeys = ['amount', 'category', 'account', 'timestamp', 'notes', 'recurrence'];
+const transactionKeys = ['name', 'amount', 'category', 'account', 'timestamp', 'notes', 'recurrence'];
 
 const router = express.Router();
 
@@ -88,7 +88,7 @@ router.post('/transactions', [
   util.log(util.format('/api/transactions/ - POST - Request: %j', req.body));
 
   const keys = Object.keys(req.body);
-  for (let i = 0; i < keys.length; i++) {
+  for (let i = 0; i < keys.length; i += 1) {
     if (transactionKeys.indexOf(keys[i]) < 0) {
       return res.status(404).json({ error: { name: 'TransactionInvalidFieldError', message: 'The transaction may only contain the specified fields' } });
     }
@@ -161,7 +161,7 @@ router.put('/transactions/:id([0-9]+)', [
     .withMessage('Invalid recurrence value'),
 ], (req, res) => {
   const keys = Object.keys(req.body);
-  for (let i = 0; i < keys.length; i++) {
+  for (let i = 0; i < keys.length; i += 1) {
     if (transactionKeys.indexOf(keys[i]) < 0) {
       return res.status(404).json({ error: { name: 'TransactionInvalidFieldError', message: 'The transaction may only contain the specified fields' } });
     }
