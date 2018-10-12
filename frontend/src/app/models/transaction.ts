@@ -29,7 +29,7 @@ export interface NewTransaction {
   account: number;
   timestamp: string;
   notes?: string;
-  recurrence?: number;
+  recurrence?: string;
 }
 
 export interface UpdateTransaction {
@@ -38,5 +38,5 @@ export interface UpdateTransaction {
   account?: number;
   timestamp?: string;
   notes?: string;
-  recurrence?: number;
+  recurrence?: string;
 }

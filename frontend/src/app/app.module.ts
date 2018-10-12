@@ -10,6 +10,9 @@ import { AccountNamePipe } from './pipes/account-name.pipe';
 import { SearchFilterPipe } from './pipes/search-filter.pipe';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { RecurrencePipe } from './pipes/recurrence.pipe';
+import { SortTransactionsPipe } from './pipes/sort-transactions.pipe';
+import { TotalAccountBalancePipe } from './pipes/total-account-balance.pipe';
 
 @NgModule({
   declarations: [
@@ -18,6 +21,9 @@ import { DatePipe } from '@angular/common';
     CreateEditTransactionDialogComponent,
     AccountNamePipe,
     SearchFilterPipe,
+    RecurrencePipe,
+    SortTransactionsPipe,
+    TotalAccountBalancePipe,
   ],
   imports: [
     BrowserModule,
@@ -27,7 +33,7 @@ import { DatePipe } from '@angular/common';
     NgbModule,
   ],
   providers: [
-    DatePipe
+    DatePipe,
   ],
   bootstrap: [AppComponent],
   entryComponents: [

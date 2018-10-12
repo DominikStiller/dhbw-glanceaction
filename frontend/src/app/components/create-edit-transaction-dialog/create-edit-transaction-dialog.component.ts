@@ -4,6 +4,7 @@ import { GlanceactionService } from '../../services/glanceaction.service';
 import { NgbActiveModal, NgbDateStruct, NgbCalendar, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { Recurrence, RecurrenceType } from '../../models/recurrence';
 
 @Component({
   selector: 'app-create-edit-transaction-dialog',
@@ -14,7 +15,7 @@ export class CreateEditTransactionDialogComponent implements OnInit {
 
   RecurrenceType = RecurrenceType;
 
-  @Input() t: Transaction;
+  @Input() transactionId: number;
   @ViewChild('domForm') domForm: ElementRef;
   private model: FormModel;
   creationMode: boolean;
@@ -32,11 +33,11 @@ export class CreateEditTransactionDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.creationMode = this.t === null;
+    this.creationMode = this.transactionId === null;
     if (this.creationMode) {
       this.model = new FormModel(this.ngbCalendar, this.datePipe);
     } else {
-      this.model = FormModel.fromTransaction(this.t, this.ngbDateParser, this.datePipe);
+      this.model = FormModel.fromTransaction(this.g.getTransaction(this.transactionId), this.ngbDateParser, this.datePipe);
     }
 
     this.form = this.fb.group(this.model);
@@ -54,12 +55,12 @@ export class CreateEditTransactionDialogComponent implements OnInit {
     if (this.creationMode) {
       this.g.createTransaction(newTransaction).subscribe(() => this.activeModal.close());
     } else {
-      this.g.updateTransaction(this.t, newTransaction).subscribe(() => this.activeModal.close());
+      this.g.updateTransaction(this.transactionId, newTransaction).subscribe(() => this.activeModal.close());
     }
   }
 
   delete() {
-    this.g.deleteTransaction(this.t).subscribe(() => this.activeModal.close());
+    this.g.deleteTransaction(this.transactionId).subscribe(() => this.activeModal.close());
   }
 }
 
@@ -81,18 +82,7 @@ class FormModel {
   }
 
   static fromTransaction(t: Transaction, dateParser: NgbDateParserFormatter, datePipe: DatePipe): FormModel {
-    let recurrenceType = RecurrenceType.Custom;
-    let recurrenceInterval = t.recurrence.charAt(0);
-    if (recurrenceInterval === '0') {
-      recurrenceType = RecurrenceType.None;
-    }
-    if (recurrenceInterval === '7') {
-      recurrenceType = RecurrenceType.Weekly;
-    }
-    if (recurrenceInterval === 'm') {
-      recurrenceType = RecurrenceType.Monthly;
-      recurrenceInterval = 30;
-    }
+    const r = Recurrence.fromTransaction(t.recurrence);
     return {
       amount: t.amount,
       category: t.category,
@@ -100,9 +90,9 @@ class FormModel {
       timestampDate: dateParser.parse(t.timestamp),
       timestampTime: datePipe.transform(new Date(t.timestamp), 'HH:mm'),
       notes: t.notes,
-      recurrenceType: recurrenceType,
-      recurrenceInterval: Number(recurrenceInterval),
-      recurrenceAmount: Number(t.recurrence.charAt(2)),
+      recurrenceType: r.type,
+      recurrenceInterval: r.interval,
+      recurrenceAmount: r.amount,
     };
   }
 
@@ -114,10 +104,11 @@ class FormModel {
       Number(model.timestampTime.substr(0, 2)),
       Number(model.timestampTime.substring(3)),
     );
-    let recurrenceInterval = model.recurrenceInterval;
-    if (model.recurrenceType === RecurrenceType.Monthly) {
-      recurrenceInterval = 'm';
-    }
+
+    const recurrence = new Recurrence();
+    recurrence.type = model.recurrenceType;
+    recurrence.interval = model.recurrenceInterval;
+    recurrence.amount = model.recurrenceAmount;
 
     return {
       amount: model.amount,
@@ -125,18 +116,11 @@ class FormModel {
       account: Number(model.account),
       timestamp: timestamp.toISOString(),
       notes: model.notes,
-      recurrence: `${recurrenceInterval} ${model.recurrenceAmount}`,
+      recurrence: recurrence.toString(),
     };
   }
 
   private static dateToTime(date: Date): string {
     return `${date.getHours()}:${date.getMinutes()}`;
   }
-}
-
-enum RecurrenceType {
-  None = 'n',
-  Weekly = 'w',
-  Monthly = 'm',
-  Custom = 'c',
 }

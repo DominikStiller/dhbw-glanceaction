@@ -23,8 +23,8 @@ export class GlanceactionService {
     ).subscribe((res) => {
       this.accounts = res[0];
       this.transactions = res[1];
-      this.sortTransactions();
       this.calculateTotalAccountBalance();
+      console.log(this.totalAccountBalance);
     });
     backend.getCategories().subscribe(d => this.categories = d);
   }
@@ -44,7 +44,7 @@ export class GlanceactionService {
   }
 
   private calculateTotalAccountBalance() {
-    this.totalAccountBalance = this.accounts.map(a => a.balance).reduce((a, b) => a + b, 0);
+    this.totalAccountBalance = this.accounts.map(a => a.initialBalance).reduce((a, b) => a + b, 0);
     this.totalAccountBalance += this.transactions
       .map(t => t.amount)
       .reduce((a, b) => a + b, 0);
@@ -73,11 +73,14 @@ export class GlanceactionService {
   /**
    * TRANSACTIONS
    */
+  getTransaction(id: number) {
+    return this.transactions.find(t => t.id === id);
+  }
+
   createTransaction(transaction: NewTransaction) {
     return this.backend.createTransaction(transaction)
       .pipe(tap((t) => {
         this.transactions.push(t);
-        this.sortTransactions();
         this.calculateTotalAccountBalance();
       }));
   }
@@ -87,7 +90,6 @@ export class GlanceactionService {
     return this.backend.updateTransaction(id, updatedTransaction)
       .pipe(tap((responseTransaction) => {
         this.transactions = this.transactions.map(t => t.id === id ? Object.assign(t, updatedTransaction) : t);
-        this.sortTransactions();
         this.calculateTotalAccountBalance();
       }));
   }
@@ -100,18 +102,6 @@ export class GlanceactionService {
         this.transactions = this.transactions.filter(t => t.id !== id);
         this.calculateTotalAccountBalance();
       }));
-  }
-
-  sortTransactions() {
-    this.transactions.sort((a, b) => {
-      if (a.timestamp < b.timestamp) {
-        return -1;
-      }
-      if (a.timestamp > b.timestamp) {
-        return 1;
-      }
-      return 0;
-    });
   }
 
   /**

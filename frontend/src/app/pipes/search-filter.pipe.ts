@@ -6,7 +6,7 @@ import { Transaction } from '../models/transaction';
 })
 export class SearchFilterPipe implements PipeTransform {
 
-  transform(transactions: Transaction[], term: string): any {
+  transform(transactions: Transaction[], term: string): Transaction[] {
     if (!term) {
       return transactions;
     }
