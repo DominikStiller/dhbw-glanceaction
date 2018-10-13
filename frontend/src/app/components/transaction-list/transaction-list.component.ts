@@ -1,10 +1,7 @@
-import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { GlanceactionService } from '../../services/glanceaction.service';
-import { Transaction } from '../../models/transaction';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CreateEditTransactionComponent }
-  from '../create-edit-transaction/create-edit-transaction.component';
-import { Router } from '@angular/router';
+import { SearchService } from '../../services/search.service';
 
 @Component({
   selector: 'app-transaction-list',
@@ -12,21 +9,12 @@ import { Router } from '@angular/router';
   styleUrls: ['./transaction-list.component.scss'],
 })
 export class TransactionListComponent implements OnInit {
-  searchTerm: string = '';
 
   constructor(public g: GlanceactionService,
-              private modalService: NgbModal,
-              private router: Router) {
+              public search: SearchService,
+              private modalService: NgbModal,) {
   }
 
   ngOnInit() {
-  }
-
-  createTransaction() {
-    this.router.navigate(['/create']);
-  }
-
-  editTransaction(t: Transaction) {
-    this.router.navigate(['/edit', t.id]);
   }
 }

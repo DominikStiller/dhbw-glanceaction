@@ -23,8 +23,12 @@ export class CreateEditTransactionComponent implements OnInit {
   creationMode: boolean;
 
   displayValidation: boolean = false;
-
   form: FormGroup;
+
+  private navigateBack = {
+    next: () => this.location.back(),
+    error: error => alert(error),
+  };
 
   constructor(private g: GlanceactionService,
               private fb: FormBuilder,
@@ -59,14 +63,14 @@ export class CreateEditTransactionComponent implements OnInit {
 
     const newTransaction = FormModel.toNewTransaction(Object.assign({}, this.form.value));
     if (this.creationMode) {
-      this.g.createTransaction(newTransaction).subscribe(() => this.location.back());
+      this.g.createTransaction(newTransaction).subscribe(this.navigateBack);
     } else {
-      this.g.updateTransaction(this.transactionId, newTransaction).subscribe(() => this.location.back());
+      this.g.updateTransaction(this.transactionId, newTransaction).subscribe(this.navigateBack);
     }
   }
 
   delete() {
-    this.g.deleteTransaction(this.transactionId).subscribe(() => this.location.back());
+    this.g.deleteTransaction(this.transactionId).subscribe(this.navigateBack);
   }
 }
 
