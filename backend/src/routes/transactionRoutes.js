@@ -23,6 +23,7 @@ function changeIdOfTransaction(transaction) {
 // REST Endpoints //
 
 router.get('/transactions', (req, res) => {
+  util.log(util.format('/api/transactions/ - GET-Request'));
   transactions.find().toArray((error, list) => {
     list.forEach((transaction, index, traArr) => {
       traArr[index] = changeIdOfTransaction(transaction);
@@ -40,20 +41,25 @@ router.post('/transactions', [
     .isFloat()
     .withMessage('Invalid amount'),
   check('category')
-    .matches(/^[a-zA-Z0-9]+$/)
-    .withMessage('Category name can only contain letters or numbers')
     .custom((value, { req }) => {
       return new Promise((resolve, reject) => {
-        const regex = new RegExp(['^', req.body.category, '$'].join(''), 'i');
-        categories.findOne({ name: regex }, (err, category) => {
-          if (err) {
-            reject(new Error('Server Error'));
-          }
-          if (!category) {
-            reject(new Error("Category doesn't exist"));
-          }
+        if (!(/^[a-zA-Z0-9]+$/).test(req.body.category) && req.body.category !== null) {
+          reject(new Error('Category name can only contain letters or numbers'));
+        }
+        if (req.body.category === null) {
           resolve(true);
-        });
+        } else {
+          const regex = new RegExp(['^', req.body.category, '$'].join(''), 'i');
+          categories.findOne({ name: regex }, (err, category) => {
+            if (err) {
+              reject(new Error('Server Error'));
+            }
+            if (!category) {
+              reject(new Error("Category doesn't exist"));
+            }
+            resolve(true);
+          });
+        }
       });
     }),
   check('account')
@@ -85,7 +91,7 @@ router.post('/transactions', [
     .matches(/^(([1-9][0-9]*|0)|m)( )([1-9][0-9]*|0)$/)
     .withMessage('Invalid recurrence value'),
 ], (req, res) => {
-  util.log(util.format('/api/transactions/ - POST - Request: %j', req.body));
+  util.log(util.format('/api/transactions/ - POST-Request: %j', req.body));
 
   const keys = Object.keys(req.body);
   for (let i = 0; i < keys.length; i += 1) {
@@ -115,20 +121,25 @@ router.put('/transactions/:id([0-9]+)', [
     .isFloat()
     .withMessage('Invalid amount'),
   check('category')
-    .matches(/^[a-zA-Z0-9]+$/)
-    .withMessage('Category name can only contain letters or numbers')
     .custom((value, { req }) => {
       return new Promise((resolve, reject) => {
-        const regex = new RegExp(['^', req.body.category, '$'].join(''), 'i');
-        categories.findOne({ name: regex }, (err, category) => {
-          if (err) {
-            reject(new Error('Server Error'));
-          }
-          if (!category) {
-            reject(new Error("Category doesn't exist"));
-          }
+        if (!(/^[a-zA-Z0-9]+$/).test(req.body.category) && req.body.category !== null) {
+          reject(new Error('Category name can only contain letters or numbers'));
+        }
+        if (req.body.category === null) {
           resolve(true);
-        });
+        } else {
+          const regex = new RegExp(['^', req.body.category, '$'].join(''), 'i');
+          categories.findOne({ name: regex }, (err, category) => {
+            if (err) {
+              reject(new Error('Server Error'));
+            }
+            if (!category) {
+              reject(new Error("Category doesn't exist"));
+            }
+            resolve(true);
+          });
+        }
       });
     }),
   check('account')
@@ -160,6 +171,8 @@ router.put('/transactions/:id([0-9]+)', [
     .matches(/^(([1-9][0-9]*|0)|m)( )([1-9][0-9]*|0)$/)
     .withMessage('Invalid recurrence value'),
 ], (req, res) => {
+  util.log(util.format('/api/transactions/%i - PUT-Request: %j', req.params.id, req.body));
+
   const keys = Object.keys(req.body);
   for (let i = 0; i < keys.length; i += 1) {
     if (transactionKeys.indexOf(keys[i]) < 0) {
@@ -187,14 +200,15 @@ router.put('/transactions/:id([0-9]+)', [
     if (!transaction) {
       return res.status(404).json({ error: { name: 'TransactionUndefinedError', message: 'The transaction to be changed doesn\'t exist' } });
     }
-    transactions.update({ _id: transactionId }, { $set: {
-      amount: newAmount,
-      category: newCategory,
-      account: newAccount,
-      timestamp: newTime,
-      recurrence: newRecurrence,
-      notes: newNotes,
-    },
+    transactions.update({ _id: transactionId }, {
+      $set: {
+        amount: newAmount,
+        category: newCategory,
+        account: newAccount,
+        timestamp: newTime,
+        recurrence: newRecurrence,
+        notes: newNotes,
+      },
     }, (error) => {
       if (error) {
         return res.status(500).send();
@@ -208,6 +222,8 @@ router.put('/transactions/:id([0-9]+)', [
 
 
 router.delete('/transactions/:id([0-9]+)', (req, res) => {
+  util.log(util.format('/api/transactions/%i - DELETE-Request', req.params.id));
+
   const transactionId = req.params.id;
 
   transactions.findOne({ _id: transactionId }, (err, transaction) => {
