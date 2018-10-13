@@ -33,6 +33,7 @@ router.get('/categories', (req, res) => {
 
 router.post('/categories', [
   check('name')
+    .trim()
     .not()
     .isEmpty()
     .withMessage('Name may not be empty')
@@ -53,6 +54,7 @@ router.post('/categories', [
       });
     }),
   check('color')
+    .trim()
     .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/)
     .withMessage('Color must be a valid hexadecimal color starting with #'),
 ], (req, res) => {
@@ -80,6 +82,7 @@ router.post('/categories', [
 
 router.put('/categories/:name([a-zA-Z0-9]+)', [
   check('name')
+    .trim()
     .not()
     .isEmpty()
     .withMessage('Name may not be empty')
@@ -100,6 +103,7 @@ router.put('/categories/:name([a-zA-Z0-9]+)', [
       });
     }),
   check('color')
+    .trim()
     .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/)
     .withMessage('Color must be a valid hexadecimal color starting with #'),
 ], (req, res) => {
@@ -152,7 +156,7 @@ router.delete('/categories/:name([a-zA-Z0-9]+)', (req, res) => {
       return res.status(404).json({ error: { name: 'CategoryUndefinedError', message: 'The category to be deleted doesn\'t exist' } });
     }
     // Removing the category to be deleted from all transactions containing this category:
-    transactions.update({ category: catName }, { $set: { category: '' } }, { multi: true }, (midErr) => {
+    transactions.update({ category: catName }, { $set: { category: null } }, { multi: true }, (midErr) => {
       if (midErr) {
         return res.status(500).send();
       }
