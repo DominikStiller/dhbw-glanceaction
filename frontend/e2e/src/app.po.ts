@@ -1,17 +1,26 @@
-import { browser, by, element } from 'protractor';
+import { browser, by, element, ElementFinder, $ } from 'protractor';
 
 export class AppPage {
-  navigateTo() {
+  navigateToRoot() {
     return browser.get('/');
   }
 
+  // TransactionListComponent
   getTransactions() {
     return element(by.tagName('app-transaction-list'))
-      .all(by.css('.transaction'));
+      .$$('.transaction');
+  }
+
+  getTransactionsCreatedByProtractor(testId: string = null) {
+    let text = 'Created by Protractor';
+    if (testId !== null) {
+      text += ` #${testId}`;
+    }
+    return element.all(by.cssContainingText('app-transaction-list .transaction', text));
   }
 
   getCreateTransactionButton() {
-    return element(by.tagName('nav'))
+    return $('nav')
       .all(by.tagName('div'))
       .last()
       .all(by.tagName('button'))
@@ -19,15 +28,24 @@ export class AppPage {
   }
 
   getEndingBalance() {
-    return element(by.css('#ending-balance')).getText();
+    return $('#ending-balance').getText();
   }
 
+  search(term: string) {
+    $('input[type=search]').sendKeys(term);
+  }
+
+  clearSearch() {
+    $('#search-reset').click();
+  }
+
+  // CreateEditTransactionComponent
   getAmountInput() {
-    return element(by.css('#input-amount'));
+    return $('#input-amount');
   }
 
   getNotesInput() {
-    return element(by.css('#input-notes'));
+    return $('#input-notes');
   }
 
   getCreateSaveTransactionButton() {
@@ -40,7 +58,15 @@ export class AppPage {
       .element(by.partialButtonText('Delete'));
   }
 
-  getTransactionsCreatedByProtractor() {
-    return element.all(by.cssContainingText('app-transaction-list .transaction', 'Created by Protractor'));
+  createTransaction(amount: number, notes: string) {
+    this.getCreateTransactionButton().click();
+    this.getAmountInput().sendKeys(amount);
+    this.getNotesInput().sendKeys(notes);
+    this.getCreateSaveTransactionButton().click();
+  }
+
+  deleteTransaction(transaction: ElementFinder) {
+    transaction.click();
+    this.getDeleteTransactionButton().click();
   }
 }

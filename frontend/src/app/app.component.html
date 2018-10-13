@@ -13,7 +13,8 @@
         </div>
         <input type="search" placeholder="Search transactions" class="form-control" id="searchbox" [(ngModel)]="search.term" [ngModelOptions]="{standalone: true}">
         <div class="input-group-append">
-          <button type="reset" class="btn btn-secondary" (click)="search.reset()">
+          <button type="reset" class="btn btn-secondary" id="search-reset"
+                  (click)="search.reset()">
             <span class="oi oi-x"></span>
           </button>
         </div>

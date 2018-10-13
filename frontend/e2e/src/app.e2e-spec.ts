@@ -6,37 +6,47 @@ describe('GlanceAction', () => {
 
   beforeEach(() => {
     page = new AppPage();
-    page.navigateTo();
+    page.navigateToRoot();
   });
 
   it('should display list of transactions', () => {
     expect(page.getTransactions().count()).toBeGreaterThan(0);
   });
 
-  it('should show a higher ending balance when adding a positive transaction, deleting it afterwards', async () => {
-    // Part 1: Test creation
+  it('should show a higher ending balance when adding a positive transaction', async () => {
+    const amountToAdd = 2646.15;
+
     const balanceToFloat = balanceString => Number(balanceString
         .substring(1)
         .replace(',', ''));
-    const amountToAdd = 2646.15;
     const initialBalance = balanceToFloat(await page.getEndingBalance());
 
-    // Create transaction
-    page.getCreateTransactionButton().click();
-    page.getAmountInput().sendKeys(amountToAdd);
-    page.getNotesInput().sendKeys('Created by Protractor');
-    page.getCreateSaveTransactionButton().click();
-
+    page.createTransaction(amountToAdd, 'Created by Protractor');
     expect(balanceToFloat(await page.getEndingBalance())).toBeCloseTo(initialBalance + amountToAdd, 2);
+  });
 
-    // Part 2: Test deletion
+  it('should delete transactions created by protractor', async () => {
     const createdByProtractor = page.getTransactionsCreatedByProtractor();
     const count = await createdByProtractor.count();
 
-    // Delete transaction
-    createdByProtractor.first().click();
-    page.getDeleteTransactionButton().click();
-
+    page.deleteTransaction(createdByProtractor.first());
     expect(page.getTransactionsCreatedByProtractor().count()).toEqual(count - 1);
+  });
+
+  it('should search', async () => {
+    const amountOfTransactions = 7;
+
+    const testId = Math.floor(Math.random() * 10000) + 1;
+    for (let i = 1; i <= amountOfTransactions; i += 1) {
+      page.createTransaction(10, `Created by Protractor #${testId}-${i}`);
+    }
+
+    page.search(testId.toString());
+    expect(page.getTransactions().count()).toEqual(amountOfTransactions);
+
+    // Clean up
+    for (let i = 1; i <= amountOfTransactions; i += 1) {
+      page.deleteTransaction(page.getTransactionsCreatedByProtractor(`${testId}-${i}`).first());
+    }
   });
 });
