@@ -5,7 +5,15 @@ export class AppPage {
     return browser.get('/');
   }
 
-  getParagraphText() {
-    return element(by.css('app-root h1')).getText();
+  getTransactions() {
+    return element(by.tagName('app-transaction-list')).all(by.css('.transaction'));
+  }
+
+  getCreateTransactionButton() {
+    return element(by.tagName('nav'))
+      .all(by.tagName('div'))
+      .last()
+      .all(by.tagName('button'))
+      .last();
   }
 }

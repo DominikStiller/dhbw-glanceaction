@@ -5,9 +5,9 @@ export class Transaction {
    */
   amount: number;
   /**
-   * Name of the category to assign
+   * ID of the category to assign
    */
-  category?: string;
+  category?: number;
   account: number;
   /**
    * Instant at which the transaction happened
@@ -25,7 +25,7 @@ export class Transaction {
 
 export interface NewTransaction {
   amount: number;
-  category?: string;
+  category?: number;
   account: number;
   timestamp: string;
   notes?: string;
@@ -34,7 +34,7 @@ export interface NewTransaction {
 
 export interface UpdateTransaction {
   amount?: number;
-  category?: string;
+  category?: number;
   account?: number;
   timestamp?: string;
   notes?: string;

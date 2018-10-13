@@ -4,10 +4,10 @@
       <br>
       <div class="row no-gutters mb-2">
         <div class="col-5 col-md-8 text-muted mr-1">
-          Account Name
+          Name
         </div>
         <div class="col-5 col-md-3 text-muted mr-1">
-          Initial Account Balance
+          Initial Balance
         </div>
       </div>
       <div class="form-group row no-gutters" *ngFor="let a of g.accounts">
@@ -64,12 +64,12 @@
       <div class="row no-gutters mb-2">
         <div class="col-5 col-md-8 mr-1">
           <div class="text-muted">
-            Category Name
+            Name
           </div>
         </div>
         <div class="input-group col-5 col-md-3 mr-1">
           <div class="text-muted">
-            Category Color
+            Color
           </div>
         </div>
       </div>
@@ -77,14 +77,14 @@
         <div class="col-5 col-md-8 mr-1">
           <input type="text"
                  class="form-control"
-                 (change)="updateCategory(c, $event)"
-                 [value]="c.name">
+                 (change)="updateCategory(c)"
+                 [(ngModel)]="c.name">
         </div>
         <div class="col-5 col-md-3 mr-1">
           <input type="color"
                  class="form-control"
-                 (change)="updateCategory(c, $event)"
-                 [value]="c.color">
+                 (change)="updateCategory(c)"
+                 [(ngModel)]="c.color">
         </div>
         <div class="col text-right">
           <button class="btn btn-outline-secondary" type="button"

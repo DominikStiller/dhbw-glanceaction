@@ -4,6 +4,9 @@ import { Observable } from 'rxjs';
 import { GlanceactionService } from '../services/glanceaction.service';
 import { map, tap } from 'rxjs/operators';
 
+/**
+ * Router guard which only lets a page load if all data has been loaded
+ */
 @Injectable({
   providedIn: 'root',
 })

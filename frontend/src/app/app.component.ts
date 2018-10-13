@@ -11,6 +11,6 @@ export class AppComponent {
   title = 'frontend';
 
   constructor(public search: SearchService,
-              private router: Router) {
+              public router: Router) {
   }
 }

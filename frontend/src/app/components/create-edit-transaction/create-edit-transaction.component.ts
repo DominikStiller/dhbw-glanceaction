@@ -30,7 +30,7 @@ export class CreateEditTransactionComponent implements OnInit {
     error: error => alert(error),
   };
 
-  constructor(private g: GlanceactionService,
+  constructor(public g: GlanceactionService,
               private fb: FormBuilder,
               private ngbCalendar: NgbCalendar,
               private ngbDateParser: NgbDateParserFormatter,
@@ -76,7 +76,7 @@ export class CreateEditTransactionComponent implements OnInit {
 
 class FormModel {
   amount: number = undefined;
-  category: string = null;
+  category: number = 0;
   account: number = undefined;
   timestampDate: NgbDateStruct;
   timestampTime: string;

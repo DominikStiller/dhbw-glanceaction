@@ -38,12 +38,12 @@
     <div class="col">
       <select
         class="form-control custom-select" formControlName="category" id="input-category">
-        <option [value]="null" class="text-dark bg-white">
+        <option [value]="0" class="text-dark bg-white">
           No category
         </option>
         <option *ngFor="let c of g.categories"
                 [style.background-color]="c.color"
-                [value]="c.name">{{ c.name }}
+                [value]="c.id">{{ c.name }}
         </option>
       </select>
     </div>

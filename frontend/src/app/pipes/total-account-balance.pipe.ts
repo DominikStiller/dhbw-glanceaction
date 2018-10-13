@@ -20,6 +20,7 @@ export class TotalAccountBalancePipe implements PipeTransform {
     totalAccountBalance += transactions
       .map(t => t.amount)
       .reduce(this.sum, 0);
+    console.log(totalAccountBalance);
     return totalAccountBalance;
   }
 
