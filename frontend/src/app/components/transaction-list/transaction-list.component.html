@@ -1,36 +1,33 @@
-<nav class="navbar navbar-dark bg-dark fixed-top">
-  <h1 class="navbar-brand">
-    GlanceAction
-  </h1>
-  <form class="form-inline">
-    <div class="input-group">
-      <input type="search" placeholder="Search transactions" class="form-control" id="searchbox" [(ngModel)]="searchTerm" [ngModelOptions]="{standalone: true}">
-      <div class="input-group-append">
-        <button type="reset" class="btn btn-secondary" (click)="searchTerm=''">
-          <span class="oi oi-x"></span>
-        </button>
-      </div>
-    </div>
-  </form>
-  <button type="button" class="btn btn-primary" (click)="createTransaction()">
-    <span class="oi oi-plus"></span>
-  </button>
-</nav>
-
-<h3 *ngIf="searchTerm && (g.transactions | searchFilter:searchTerm).length !== 0">
-  {{ (g.transactions | recurrence | searchFilter:searchTerm).length }} search results
-  <small class="text-muted">for "{{ searchTerm }}"</small>
+<h3 *ngIf="search.term && (g.transactions | searchFilter:search.term).length !== 0">
+  {{ (g.transactions | recurrence | searchFilter:search.term).length }} search results
+  <small class="text-muted">for "{{ search.term }}"</small>
 </h3>
 
-<div class="row" *ngIf="!searchTerm">
+<div class="row mb-2" *ngIf="!search.term">
   <div class="text-right w-100">
     <span class="text-muted">Beginning Balance:</span>
     <strong class="col text-right text-large">{{ g.transactions | empty | totalAccountBalance | currency:'EUR' }}</strong>
   </div>
 </div>
-<!-- TODO category colors as left border -->
-<div *ngFor="let t of (g.transactions | searchFilter:searchTerm | recurrence | sortTransactions)"
-     class="row transaction" (click)="editTransaction(t)">
+<div class="row mb-2">
+  <div class="col-2 col-md-3 text-muted">
+    Date
+  </div>
+  <div class="col col-lg-2 text-muted">
+    Category
+    <span class="d-md-none">/ Notes</span>
+  </div>
+  <div class="col d-none d-md-inline text-muted">
+    Notes
+  </div>
+  <div class="col-4 col-lg-2 text-right text-muted">
+    <span class="d-none d-sm-inline">Account /</span>
+    Amount
+  </div>
+</div>
+<div *ngFor="let t of (g.transactions | searchFilter:search.term | recurrence | sortTransactions)"
+     class="row transaction" [style.border-left-color]="t.category === null ? 'white' : g.getCategory(t.category).color"
+     [routerLink]="['/edit', t.id]">
   <span class="col-2 col-md-3">
     <span class="d-none d-md-inline">{{ t.timestamp | date:'longDate' }}</span>
     <span class="d-md-none">{{ t.timestamp | date:'MMM d' }}</span>
@@ -52,15 +49,17 @@
     <span [class.text-success]="t.amount > 0" [class.text-danger]="t.amount < 0">{{ t.amount | currency:'EUR' }}</span>
   </span>
 </div>
-<div *ngIf="!searchTerm && g.transactions.length === 0" class="text-muted">
-  No transactions found.
+<div *ngIf="!search.term && g.transactions.length == 0" class="text-muted">
+  No transactions found. Create one now:
+  <button class="btn btn-primary" routerLink="/create">
+    <span class="oi oi-plus"></span>
+  </button>
 </div>
-<div *ngIf="searchTerm && (g.transactions | searchFilter:searchTerm).length === 0" class="text-muted">
-  No transactions matching "{{ searchTerm }}" found. Create one by clicking the <span class="oi oi-plus"></span> in the upper
-  right corner.
+<div *ngIf="search.term && (g.transactions | searchFilter:search.term).length === 0" class="text-muted">
+  No transactions matching "{{ search.term }}" found.
 </div>
-<hr class="double-line" *ngIf="!searchTerm">
-<div class="row" *ngIf="!searchTerm">
+<hr class="double-line" *ngIf="!search.term">
+<div class="row" *ngIf="!search.term">
   <div class="text-right w-100">
     <span class="text-muted">Ending Balance:</span>
     <strong class="col text-large">{{ g.transactions | recurrence | totalAccountBalance | currency:'EUR' }}</strong>

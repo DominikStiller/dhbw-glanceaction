@@ -62,7 +62,10 @@ export class GlanceactionService {
 
   deleteAccount(account: Account | number) {
     const id = typeof account === 'number' ? account : account.id;
-    return this.backend.deleteAccount(id);
+    return this.backend.deleteAccount(id)
+      .pipe(tap(() => {
+        this.accounts = this.accounts.filter(a => a.id !== id);
+      }));
   }
 
   /**
