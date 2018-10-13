@@ -12,8 +12,9 @@ const router = express.Router();
 
 // Formatting Functions //
 
-function removeIdFromCategory(category) {
+function changeIdOfCategory(category) {
   const listCategory = category;
+  listCategory.id = listCategory._id;
   delete listCategory._id;
   return listCategory;
 }
@@ -24,7 +25,7 @@ router.get('/categories', (req, res) => {
   util.log(util.format('/api/categories/ - GET-Request'));
   categories.find().toArray((error, list) => {
     list.forEach((category, index, catArr) => {
-      catArr[index] = removeIdFromCategory(category);
+      catArr[index] = changeIdOfCategory(category);
     });
     res.json(list);
   });
@@ -74,13 +75,13 @@ router.post('/categories', [
 
   categories.insert(req.body, (error, result) => {
     categories.findOne(result, (innerError, updatedResult) => {
-      res.status(201).send(removeIdFromCategory(updatedResult));
+      res.status(201).send(changeIdOfCategory(updatedResult));
     });
   });
 });
 
 
-router.put('/categories/:name([a-zA-Z0-9]+)', [
+router.put('/categories/:id([0-9]+)', [
   check('name')
     .trim()
     .not()
@@ -107,7 +108,7 @@ router.put('/categories/:name([a-zA-Z0-9]+)', [
     .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/)
     .withMessage('Color must be a valid hexadecimal color starting with #'),
 ], (req, res) => {
-  util.log(util.format('/api/categories/%s - PUT-Request: %j', req.params.name, req.body));
+  util.log(util.format('/api/categories/%i - PUT-Request: %j', req.params.id, req.body));
 
   const keys = Object.keys(req.body);
   for (let i = 0; i < keys.length; i += 1) {
@@ -123,32 +124,32 @@ router.put('/categories/:name([a-zA-Z0-9]+)', [
 
   const newName = req.body.name;
   const newColor = req.body.color;
-  const categoryName = new RegExp(['^', req.params.name, '$'].join(''), 'i');
+  const categoryId = req.params.id;
 
-  categories.findOne({ name: categoryName }, (err, category) => {
+  categories.findOne({ _id: categoryId }, (err, category) => {
     if (err) {
       return res.status(500).send();
     }
     if (!category) {
       return res.status(404).json({ error: { name: 'CategoryUndefinedError', message: 'The category to be changed doesn\'t exist' } });
     }
-    categories.update({ name: categoryName }, { $set: { name: newName, color: newColor } }, (innerError) => {
+    categories.update({ _id: categoryId }, { $set: { name: newName, color: newColor } }, (innerError) => {
       if (innerError) {
         return res.status(500).send();
       }
-      categories.findOne({ name: categoryName }, (nextErr, updatedResult) => {
-        res.status(201).send(removeIdFromCategory(updatedResult));
+      categories.findOne({ _id: categoryId }, (nextErr, updatedResult) => {
+        res.status(201).send(changeIdOfCategory(updatedResult));
       });
     });
   });
 });
 
 
-router.delete('/categories/:name([a-zA-Z0-9]+)', (req, res) => {
-  util.log(util.format('/api/categories/%s - DELETE-Request', req.params.name));
-  const catName = new RegExp(['^', req.params.name, '$'].join(''), 'i');
+router.delete('/categories/:id([0-9]+)', (req, res) => {
+  util.log(util.format('/api/categories/%i - DELETE-Request', req.params.id));
+  const categoryId = req.params.id;
 
-  categories.findOne({ name: catName }, (err, category) => {
+  categories.findOne({ _id: categoryId }, (err, category) => {
     if (err) {
       return res.status(500).send();
     }
@@ -156,11 +157,11 @@ router.delete('/categories/:name([a-zA-Z0-9]+)', (req, res) => {
       return res.status(404).json({ error: { name: 'CategoryUndefinedError', message: 'The category to be deleted doesn\'t exist' } });
     }
     // Removing the category to be deleted from all transactions containing this category:
-    transactions.update({ category: catName }, { $set: { category: null } }, { multi: true }, (midErr) => {
+    transactions.update({ category: categoryId }, { $set: { category: null } }, { multi: true }, (midErr) => {
       if (midErr) {
         return res.status(500).send();
       }
-      categories.findAndRemove({ name: catName }, (innerErr) => {
+      categories.findAndRemove({ _id: categoryId }, (innerErr) => {
         if (innerErr) {
           return res.status(500).send();
         }

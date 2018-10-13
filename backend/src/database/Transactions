@@ -1,21 +1,24 @@
-{"k":"0000000078","o":"0000000175","v":"001"}
-{"_id":4,"_uid":7,"_dt":1539324593119,"_s":"bb9502c6e36e30d848cea613f9724df1"}
-{"name":"Einkauf","amount":"14.37","category":"Lebensmittel","recurrence":"0 0","account":"14","timestamp":"2018-01-01","_id":{"$wrap":"$oid","v":4},"notes":"Lidl lohnt sich"}
-{"k":"0000000078","o":"0000000152","v":"001"}
-{"_id":5,"_uid":7,"_dt":1539324548352,"_s":"aa88de66f43db8e923bcd7a345a9daf7"}
-{"name":"Mittagessen","amount":"6.50","category":"Lebensmittel","recurrence":"0 0","account":"14","timestamp":"2018-01-02","_id":{"$wrap":"$oid","v":5}}
+{"k":"0000000078","o":"0000000156","v":"001"}
+{"_id":4,"_uid":7,"_dt":1539450104812,"_s":"b61ce8c81ed0c7da015fba4e5f504d32"}
+{"name":"Einkauf","amount":0.9,"category":2,"recurrence":"0 0","account":14,"timestamp":"2018-01-01","_id":{"$wrap":"$oid","v":4},"notes":"Lidl lohnt sich"}
+{"k":"0000000078","o":"0000000142","v":"001"}
+{"_id":5,"_uid":7,"_dt":1539416283705,"_s":"6db570d7836b366d513fbde5062a3d4f"}
+{"name":"Mittagessen","amount":"6.50","category":null,"recurrence":"0 0","account":"14","timestamp":"2018-01-02","_id":{"$wrap":"$oid","v":5}}
 {"k":"0000000078","o":"0000000142","v":"001"}
 {"_id":6,"_uid":7,"_dt":1539324626401,"_s":"f316ade24a5dbf7140585ac8370096a8"}
 {"name":"Miete","amount":"420.00","category":"Miete","recurrence":"m 12","account":"14","timestamp":"2018-01-31","_id":{"$wrap":"$oid","v":6}}
 {"k":"0000000078","o":"0000000166","v":"001"}
 {"_id":7,"_uid":7,"_dt":1539324659060,"_s":"0944e233b3dc1f58053a32b82459e9b7"}
 {"name":"Bestechungsgeld Web-Engineering","amount":"100.00","category":"DHBW","recurrence":"3 8","account":"15","timestamp":"2018-01-01","_id":{"$wrap":"$oid","v":7}}
-{"k":"0000000078","o":"0000000142","v":"001"}
-{"_id":5,"_uid":7,"_dt":1539416283705,"_s":"6db570d7836b366d513fbde5062a3d4f"}
-{"name":"Mittagessen","amount":"6.50","category":null,"recurrence":"0 0","account":"14","timestamp":"2018-01-02","_id":{"$wrap":"$oid","v":5}}
-{"k":"0000000078","o":"0000000171","v":"001"}
-{"_id":4,"_uid":7,"_dt":1539422614613,"_s":"8686fce2a8737286018e8b63b1dce7a7"}
-{"name":"Einkauf","amount":14.37,"category":"Lebensmittel","recurrence":"0 0","account":14,"timestamp":"2018-01-01","_id":{"$wrap":"$oid","v":4},"notes":"Lidl lohnt sich"}
-{"k":"0000000078","o":"0000000167","v":"001"}
-{"_id":4,"_uid":7,"_dt":1539422647193,"_s":"68c1f29efb76053b8e47a1e4d9f5a45e"}
-{"name":"Einkauf","amount":0,"category":"Lebensmittel","recurrence":"0 0","account":14,"timestamp":"2018-01-01","_id":{"$wrap":"$oid","v":4},"notes":"Lidl lohnt sich"}
+{"k":"0000000080","o":"0000000163","v":"001"}
+{"_id":18,"_uid":18,"_dt":1539458629425,"_s":"58b0575f40113b57dfd91a5b9dbbb645"}
+{"name":"72vdasd91fhar473","amount":2.33,"category":0,"recurrence":"0 0","account":17,"timestamp":"2018-01-01","notes":"Some notes.","_id":{"$wrap":"$oid","v":18}}
+{"k":"0000000051","o":"0000000000","v":"001"}
+{"_id":18,"_uid":18,"_dt":1539458629447,"_a":"del"}
+
+{"k":"0000000080","o":"0000000163","v":"001"}
+{"_id":19,"_uid":19,"_dt":1539458677947,"_s":"fafbb679b745c8fd09d10938eb95e933"}
+{"name":"72vdasd91fhar473","amount":2.33,"category":0,"recurrence":"0 0","account":19,"timestamp":"2018-01-01","notes":"Some notes.","_id":{"$wrap":"$oid","v":19}}
+{"k":"0000000051","o":"0000000000","v":"001"}
+{"_id":19,"_uid":19,"_dt":1539458677963,"_a":"del"}
+

@@ -38,3 +38,4 @@ server.listen(4000, () => {
 });
 
 module.exports = app;
+module.exports = server;
