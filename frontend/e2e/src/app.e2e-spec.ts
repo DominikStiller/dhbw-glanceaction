@@ -1,5 +1,6 @@
 import { AppPage } from './app.po';
-import { browser } from 'protractor';
+
+const generateTestId = () => Math.floor(Math.random() * 10000) + 1;
 
 describe('GlanceAction', () => {
   let page: AppPage;
@@ -25,6 +26,7 @@ describe('GlanceAction', () => {
     expect(balanceToFloat(await page.getEndingBalance())).toBeCloseTo(initialBalance + amountToAdd, 2);
   });
 
+  // Clean up transactions created by previous test
   it('should delete transactions created by protractor', async () => {
     const createdByProtractor = page.getTransactionsCreatedByProtractor();
     const count = await createdByProtractor.count();
@@ -36,13 +38,22 @@ describe('GlanceAction', () => {
   it('should search', async () => {
     const amountOfTransactions = 7;
 
-    const testId = Math.floor(Math.random() * 10000) + 1;
+    const testId = generateTestId();
     for (let i = 1; i <= amountOfTransactions; i += 1) {
       page.createTransaction(10, `Created by Protractor #${testId}-${i}`);
     }
 
+    const transactionCount = await page.getTransactions().count();
+
+    // Test search
     page.search(testId.toString());
-    expect(page.getTransactions().count()).toEqual(amountOfTransactions);
+    const searchResultCount = await page.getTransactions().count();
+    expect(searchResultCount).toEqual(amountOfTransactions);
+    expect(searchResultCount).toBeLessThanOrEqual(transactionCount);
+
+    // Test clear search
+    page.clearSearch();
+    expect(page.getTransactions().count()).toBeGreaterThanOrEqual(searchResultCount);
 
     // Clean up
     for (let i = 1; i <= amountOfTransactions; i += 1) {
@@ -50,3 +61,4 @@ describe('GlanceAction', () => {
     }
   });
 });
+
