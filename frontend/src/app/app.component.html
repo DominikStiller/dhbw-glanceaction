@@ -1,20 +1,33 @@
 <nav class="navbar navbar-dark bg-dark fixed-top">
-  <h1 class="navbar-brand">
-    GlanceAction
-  </h1>
-  <form class="form-inline" [class.d-none]="router.url !== '/'">
-    <div class="input-group">
-      <input type="search" placeholder="Search transactions" class="form-control" id="searchbox" [(ngModel)]="search.term" [ngModelOptions]="{standalone: true}">
-      <div class="input-group-append">
-        <button type="reset" class="btn btn-secondary" (click)="search.reset()">
-          <span class="oi oi-x"></span>
-        </button>
+  <a class="navbar-brand" routerLink="/">
+    <img src="assets/logo.png" height="30" class="d-inline-block align-top" alt="GlanceAction">
+  </a>
+
+  <div class="d-none d-sm-inline">
+    <form class="form-inline" [class.d-none]="router.url !== '/'">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <div class="input-group-text">
+            <span class="oi oi-magnifying-glass"></span>
+          </div>
+        </div>
+        <input type="search" placeholder="Search transactions" class="form-control" id="searchbox" [(ngModel)]="search.term" [ngModelOptions]="{standalone: true}">
+        <div class="input-group-append">
+          <button type="reset" class="btn btn-secondary" (click)="search.reset()">
+            <span class="oi oi-x"></span>
+          </button>
+        </div>
       </div>
-    </div>
-  </form>
-  <button type="button" class="btn btn-primary" routerLink="/create">
-    <span class="oi oi-plus"></span>
-  </button>
+    </form>
+  </div>
+  <div>
+    <button type="button" class="btn btn-secondary mr-1" routerLink="/settings">
+      <span class="oi oi-cog"></span>
+    </button>
+    <button type="button" class="btn btn-primary" routerLink="/create">
+      <span class="oi oi-plus"></span>
+    </button>
+  </div>
 </nav>
 
 <div class="container" id="app-container">

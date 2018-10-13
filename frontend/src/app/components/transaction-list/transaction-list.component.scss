@@ -3,6 +3,7 @@
 .transaction {
   padding: 10px 0;
   cursor: pointer;
+  border-left: 3px solid;
 
   &:hover {
     background-color: $smoke;

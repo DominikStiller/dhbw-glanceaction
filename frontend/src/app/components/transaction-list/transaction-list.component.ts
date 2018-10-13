@@ -12,7 +12,7 @@ export class TransactionListComponent implements OnInit {
 
   constructor(public g: GlanceactionService,
               public search: SearchService,
-              private modalService: NgbModal,) {
+              private modalService: NgbModal) {
   }
 
   ngOnInit() {
