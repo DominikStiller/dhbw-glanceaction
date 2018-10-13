@@ -5,6 +5,7 @@
       2,
       180
     ],
-    "no-underscore-dangle": 0
+    "no-underscore-dangle": 0,
+    "consistent-return": "off"
   }
 }

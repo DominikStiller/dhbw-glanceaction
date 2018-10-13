@@ -21,6 +21,7 @@ function removeIdFromCategory(category) {
 // REST Endpoints //
 
 router.get('/categories', (req, res) => {
+  util.log(util.format('/api/categories/ - GET-Request'));
   categories.find().toArray((error, list) => {
     list.forEach((category, index, catArr) => {
       catArr[index] = removeIdFromCategory(category);
@@ -55,7 +56,7 @@ router.post('/categories', [
     .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/)
     .withMessage('Color must be a valid hexadecimal color starting with #'),
 ], (req, res) => {
-  util.log(util.format('/api/categories/ - POST - Request: %j', req.body));
+  util.log(util.format('/api/categories/ - POST-Request: %j', req.body));
 
   const keys = Object.keys(req.body);
   for (let i = 0; i < keys.length; i += 1) {
@@ -102,6 +103,8 @@ router.put('/categories/:name([a-zA-Z0-9]+)', [
     .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/)
     .withMessage('Color must be a valid hexadecimal color starting with #'),
 ], (req, res) => {
+  util.log(util.format('/api/categories/%s - PUT-Request: %j', req.params.name, req.body));
+
   const keys = Object.keys(req.body);
   for (let i = 0; i < keys.length; i += 1) {
     if (categoryKeys.indexOf(keys[i]) < 0) {
@@ -138,6 +141,7 @@ router.put('/categories/:name([a-zA-Z0-9]+)', [
 
 
 router.delete('/categories/:name([a-zA-Z0-9]+)', (req, res) => {
+  util.log(util.format('/api/categories/%s - DELETE-Request', req.params.name));
   const catName = new RegExp(['^', req.params.name, '$'].join(''), 'i');
 
   categories.findOne({ name: catName }, (err, category) => {

@@ -22,6 +22,7 @@ function changeIdOfAccount(account) {
 // REST Endpoints //
 
 router.get('/accounts', (req, res) => {
+  util.log(util.format('/api/accounts/ - GET-Request'));
   accounts.find().toArray((error, list) => {
     list.forEach((account, index, accArr) => {
       accArr[index] = changeIdOfAccount(account);
@@ -44,7 +45,7 @@ router.post('/accounts', [
     .isFloat()
     .withMessage('Invalid initial balance'),
 ], (req, res) => {
-  util.log(util.format('/api/accounts/ - POST - Request: %j', req.body));
+  util.log(util.format('/api/accounts/ - POST-Request: %j', req.body));
 
   const keys = Object.keys(req.body);
   for (let i = 0; i < keys.length; i += 1) {
@@ -80,6 +81,8 @@ router.put('/accounts/:id([0-9]+)', [
     .isFloat()
     .withMessage('Invalid initial balance'),
 ], (req, res) => {
+  util.log(util.format('/api/accounts/%i - PUT-Request: %j', req.params.id, req.body));
+
   const keys = Object.keys(req.body);
   for (let i = 0; i < keys.length; i += 1) {
     if (accountKeys.indexOf(keys[i]) < 0) {
@@ -115,6 +118,7 @@ router.put('/accounts/:id([0-9]+)', [
 });
 
 router.delete('/accounts/:id([0-9]+)', (req, res) => {
+  util.log(util.format('/api/accounts/%i - DELETE-Request', req.params.id));
   const accountId = req.params.id;
 
   // Deleting an account also deleted all transactions associated with this account. User confirmation in frontend!
