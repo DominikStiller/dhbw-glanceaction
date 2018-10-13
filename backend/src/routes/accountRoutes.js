@@ -1,4 +1,4 @@
-/* eslint-disable no-param-reassign */
+/* eslint-disable no-param-reassign,arrow-body-style */
 const express = require('express');
 const util = require('util');
 const { check, validationResult } = require('express-validator/check');
@@ -33,6 +33,7 @@ router.get('/accounts', (req, res) => {
 
 router.post('/accounts', [
   check('name')
+    .trim()
     .not()
     .isEmpty()
     .withMessage('Name may not be empty')
@@ -42,6 +43,10 @@ router.post('/accounts', [
     .not()
     .isEmpty()
     .withMessage('Initial balance may not be empty')
+    .customSanitizer((value) => {
+      return value.replace(/,/g, '.');
+    })
+    .toFloat()
     .isFloat()
     .withMessage('Invalid initial balance'),
 ], (req, res) => {
@@ -69,6 +74,7 @@ router.post('/accounts', [
 
 router.put('/accounts/:id([0-9]+)', [
   check('name')
+    .trim()
     .not()
     .isEmpty()
     .withMessage('Name may not be empty')
@@ -78,6 +84,10 @@ router.put('/accounts/:id([0-9]+)', [
     .not()
     .isEmpty()
     .withMessage('Initial balance may not be empty')
+    .customSanitizer((value) => {
+      return value.replace(/,/g, '.');
+    })
+    .toFloat()
     .isFloat()
     .withMessage('Invalid initial balance'),
 ], (req, res) => {

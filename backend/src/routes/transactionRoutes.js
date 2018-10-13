@@ -38,9 +38,23 @@ router.post('/transactions', [
     .not()
     .isEmpty()
     .withMessage('Amount may not be empty')
+    .customSanitizer((value) => {
+      return value.replace(/,/g, '.');
+    })
+    .toFloat()
     .isFloat()
-    .withMessage('Invalid amount'),
+    .withMessage('Invalid amount')
+    .custom((value, { req }) => {
+      return new Promise((resolve, reject) => {
+        if (parseFloat(req.body.amount) === 0) {
+          reject(new Error('Amount must not be 0'));
+        } else {
+          resolve(true);
+        }
+      });
+    }),
   check('category')
+    .trim()
     .custom((value, { req }) => {
       return new Promise((resolve, reject) => {
         if (!(/^[a-zA-Z0-9]+$/).test(req.body.category) && req.body.category !== null) {
@@ -66,6 +80,7 @@ router.post('/transactions', [
     .not()
     .isEmpty()
     .withMessage('Account may not be empty')
+    .toInt()
     .isInt()
     .withMessage('Invalid account ID')
     .custom((value, { req }) => {
@@ -82,12 +97,14 @@ router.post('/transactions', [
       });
     }),
   check('timestamp')
+    .trim()
     .not()
     .isEmpty()
     .withMessage('Timestamp may not be empty')
     .isISO8601()
     .withMessage('Timestamp must be in ISO 8601 format'),
   check('recurrence')
+    .trim()
     .matches(/^(([1-9][0-9]*|0)|m)( )([1-9][0-9]*|0)$/)
     .withMessage('Invalid recurrence value'),
 ], (req, res) => {
@@ -118,9 +135,23 @@ router.put('/transactions/:id([0-9]+)', [
     .not()
     .isEmpty()
     .withMessage('Amount may not be empty')
+    .customSanitizer((value) => {
+      return value.replace(/,/g, '.');
+    })
+    .toFloat()
     .isFloat()
-    .withMessage('Invalid amount'),
+    .withMessage('Invalid amount')
+    .custom((value, { req }) => {
+      return new Promise((resolve, reject) => {
+        if (parseFloat(req.body.amount) === 0) {
+          reject(new Error('Amount must not be 0'));
+        } else {
+          resolve(true);
+        }
+      });
+    }),
   check('category')
+    .trim()
     .custom((value, { req }) => {
       return new Promise((resolve, reject) => {
         if (!(/^[a-zA-Z0-9]+$/).test(req.body.category) && req.body.category !== null) {
@@ -146,6 +177,7 @@ router.put('/transactions/:id([0-9]+)', [
     .not()
     .isEmpty()
     .withMessage('Account may not be empty')
+    .toInt()
     .isInt()
     .withMessage('Invalid account ID')
     .custom((value, { req }) => {
@@ -162,12 +194,14 @@ router.put('/transactions/:id([0-9]+)', [
       });
     }),
   check('timestamp')
+    .trim()
     .not()
     .isEmpty()
     .withMessage('Timestamp may not be empty')
     .isISO8601()
     .withMessage('Timestamp must be in ISO 8601 format'),
   check('recurrence')
+    .trim()
     .matches(/^(([1-9][0-9]*|0)|m)( )([1-9][0-9]*|0)$/)
     .withMessage('Invalid recurrence value'),
 ], (req, res) => {

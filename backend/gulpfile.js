@@ -1,7 +1,7 @@
 /* eslint-disable arrow-body-style */
 const gulp = require('gulp');
-const babel = require('gulp-babel');
-const uglify = require('gulp-uglify');
+const eslint = require('gulp-eslint');
+const uglify = require('gulp-uglify-es').default;
 
 const files = {
   projectSources: [
@@ -9,11 +9,15 @@ const files = {
   ],
 };
 
-gulp.task('jsUglify', () => {
+gulp.task('lintSources', () => {
   return gulp.src(files.projectSources)
-    .pipe(babel({
-      presets: ['es2015'],
-    }))
+    .pipe(eslint({ configFile: '.eslintrc.json' }))
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError());
+});
+
+gulp.task('minify', () => {
+  return gulp.src(files.projectSources)
     .pipe(uglify())
-    .pipe(gulp.dest('public/js/'));
+    .pipe(gulp.dest('./dist'));
 });

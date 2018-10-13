@@ -13,3 +13,9 @@
 {"k":"0000000078","o":"0000000142","v":"001"}
 {"_id":5,"_uid":7,"_dt":1539416283705,"_s":"6db570d7836b366d513fbde5062a3d4f"}
 {"name":"Mittagessen","amount":"6.50","category":null,"recurrence":"0 0","account":"14","timestamp":"2018-01-02","_id":{"$wrap":"$oid","v":5}}
+{"k":"0000000078","o":"0000000171","v":"001"}
+{"_id":4,"_uid":7,"_dt":1539422614613,"_s":"8686fce2a8737286018e8b63b1dce7a7"}
+{"name":"Einkauf","amount":14.37,"category":"Lebensmittel","recurrence":"0 0","account":14,"timestamp":"2018-01-01","_id":{"$wrap":"$oid","v":4},"notes":"Lidl lohnt sich"}
+{"k":"0000000078","o":"0000000167","v":"001"}
+{"_id":4,"_uid":7,"_dt":1539422647193,"_s":"68c1f29efb76053b8e47a1e4d9f5a45e"}
+{"name":"Einkauf","amount":0,"category":"Lebensmittel","recurrence":"0 0","account":14,"timestamp":"2018-01-01","_id":{"$wrap":"$oid","v":4},"notes":"Lidl lohnt sich"}
