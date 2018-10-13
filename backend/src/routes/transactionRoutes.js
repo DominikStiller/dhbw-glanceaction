@@ -54,22 +54,21 @@ router.post('/transactions', [
       });
     }),
   check('category')
-    .trim()
+    .toInt()
+    .isInt()
+    .withMessage('Category ID must be a number')
     .custom((value, { req }) => {
       return new Promise((resolve, reject) => {
-        if (!(/^[a-zA-Z0-9]+$/).test(req.body.category) && req.body.category !== null) {
-          reject(new Error('Category name can only contain letters or numbers'));
-        }
-        if (req.body.category === null) {
+        if (req.body.category === 0) {
           resolve(true);
         } else {
-          const regex = new RegExp(['^', req.body.category, '$'].join(''), 'i');
-          categories.findOne({ name: regex }, (err, category) => {
+          const categoryId = parseInt(req.body.category, 10);
+          categories.findOne({ _id: categoryId }, (err, category) => {
             if (err) {
               reject(new Error('Server Error'));
             }
             if (!category) {
-              reject(new Error("Category doesn't exist"));
+              reject(new Error("The category to be assigned doesn't exist"));
             }
             resolve(true);
           });
@@ -151,22 +150,21 @@ router.put('/transactions/:id([0-9]+)', [
       });
     }),
   check('category')
-    .trim()
+    .toInt()
+    .isInt()
+    .withMessage('Category ID must be a number')
     .custom((value, { req }) => {
       return new Promise((resolve, reject) => {
-        if (!(/^[a-zA-Z0-9]+$/).test(req.body.category) && req.body.category !== null) {
-          reject(new Error('Category name can only contain letters or numbers'));
-        }
-        if (req.body.category === null) {
+        if (req.body.category === 0) {
           resolve(true);
         } else {
-          const regex = new RegExp(['^', req.body.category, '$'].join(''), 'i');
-          categories.findOne({ name: regex }, (err, category) => {
+          const categoryId = parseInt(req.body.category, 10);
+          categories.findOne({ _id: categoryId }, (err, category) => {
             if (err) {
               reject(new Error('Server Error'));
             }
             if (!category) {
-              reject(new Error("Category doesn't exist"));
+              reject(new Error("The category to be assigned doesn't exist"));
             }
             resolve(true);
           });
