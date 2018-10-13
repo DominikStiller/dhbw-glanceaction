@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BackendService } from './backend.service';
 import { NewTransaction, Transaction, UpdateTransaction } from '../models/transaction';
-import { Category, UpdateCategory } from '../models/category';
+import { Category, CreateCategory, UpdateCategory } from '../models/category';
 import { Account, NewAccount, UpdateAccount } from '../models/account';
 import { tap } from 'rxjs/operators';
 import { Subject, forkJoin } from 'rxjs';
@@ -102,27 +102,27 @@ export class GlanceactionService {
   /**
    * CATEGORIES
    */
-  getCategory(name: string) {
-    return this.categories.find(c => c.name === name);
+  getCategory(id: number) {
+    return this.categories.find(c => c.id === id);
   }
 
-  createCategory(category: Category) {
+  createCategory(category: CreateCategory) {
     return this.backend.createCategory(category)
       .pipe(tap((c => this.categories.push(c))));
   }
 
-  updateCategory(oldCategory: Category | string, updatedCategory: UpdateCategory) {
-    const name = typeof oldCategory === 'string' ? oldCategory : oldCategory.name;
-    return this.backend.updateCategory(name, updatedCategory)
+  updateCategory(oldCategory: Category | number, updatedCategory: UpdateCategory) {
+    const id = typeof oldCategory === 'number' ? oldCategory : oldCategory.id;
+    return this.backend.updateCategory(id, updatedCategory)
       .pipe(tap((responseCategory) => {
         // Patch local version
-        this.categories = this.categories.map(c => c.name === name ? Object.assign(c, responseCategory) : c);
+        this.categories = this.categories.map(c => c.id === id ? Object.assign(c, responseCategory) : c);
       }));
   }
 
-  deleteCategory(category: Category | string) {
-    const name = typeof category === 'string' ? category : category.name;
-    return this.backend.deleteCategory(name)
-      .pipe(tap(() => this.categories = this.categories.filter(c => c.name !== name)));
+  deleteCategory(category: Category | number) {
+    const id = typeof category === 'number' ? category : category.id;
+    return this.backend.deleteCategory(id)
+      .pipe(tap(() => this.categories = this.categories.filter(c => c.id !== id)));
   }
 }

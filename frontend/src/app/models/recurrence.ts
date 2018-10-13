@@ -32,6 +32,8 @@ export class Recurrence {
       interval = 'm';
     } else if (this.type === RecurrenceType.Weekly) {
       interval = '7';
+    } else if (this.type === RecurrenceType.None) {
+      interval = '0';
     }
     return `${interval} ${this.amount}`;
   }

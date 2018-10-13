@@ -63,16 +63,11 @@ export class SettingsComponent implements OnInit {
     });
   }
 
-  updateCategory(c: Category, event) {
+  updateCategory(c: Category) {
     const update: UpdateCategory = {
       name: c.name,
       color: c.color,
     };
-    if (event.target.type === 'text') {
-      update.name = event.target.value;
-    } else {
-      update.color = event.target.value;
-    }
     this.g.updateCategory(c, update).subscribe(() => alert('Category has been updated successfully.'));
   }
 

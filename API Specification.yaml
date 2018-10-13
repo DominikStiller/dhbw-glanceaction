@@ -167,7 +167,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Category'
+              $ref: '#/components/schemas/CreateCategory'
       responses:
         '201':
           description: Success
@@ -273,8 +273,8 @@ components:
           format: float
           description: Amount in Euro
         category:
-          type: string
-          description: Name of the category to assign
+          type: integer
+          format: int32
         account:
           type: integer
           format: int32
@@ -298,7 +298,8 @@ components:
           type: number
           format: float
         category:
-          type: string
+          type: integer
+          format: int32
         account:
           type: integer
           format: int32
@@ -316,7 +317,8 @@ components:
           type: number
           format: float
         category:
-          type: string
+          type: integer
+          format: int32
         account:
           type: integer
           format: int32
@@ -340,6 +342,16 @@ components:
         id:
           type: number
           format: int32
+        name:
+          type: string
+        color:
+          type: string
+          format: hex-color
+    CreateCategory:
+      type: object
+      required:
+        - name
+      properties:
         name:
           type: string
         color:

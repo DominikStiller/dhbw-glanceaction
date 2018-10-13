@@ -1,5 +1,11 @@
 #app-container {
-  margin: 6em auto 2em;
+  margin: 5em auto 2em;
+}
+
+@media (min-width: 576px) {
+  #app-container {
+    margin-top: 6em;
+  }
 }
 
 .text-large {

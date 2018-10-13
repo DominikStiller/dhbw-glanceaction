@@ -4,20 +4,20 @@ import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { environment } from '../../environments/environment';
-import { Category, UpdateCategory } from '../models/category';
+import { Category, CreateCategory, UpdateCategory } from '../models/category';
 import { Account, NewAccount, UpdateAccount } from '../models/account';
 import { NewTransaction, Transaction, UpdateTransaction } from '../models/transaction';
-
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type': 'application/json',
-  }),
-};
 
 @Injectable({
   providedIn: 'root',
 })
 export class BackendService {
+
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+    }),
+  };
 
   constructor(private http: HttpClient) {
   }
@@ -30,7 +30,7 @@ export class BackendService {
   }
 
   createAccount(account: NewAccount) {
-    return this.http.post<Account>(BackendService.url('accounts'), account, httpOptions)
+    return this.http.post<Account>(BackendService.url('accounts'), account, this.httpOptions)
       .pipe(catchError(BackendService.handleError));
   }
 
@@ -38,7 +38,7 @@ export class BackendService {
     return this.http.put<Account>(
       BackendService.url(`accounts/${accountId}`),
       updatedAccount,
-      httpOptions,
+      this.httpOptions,
     ).pipe(catchError(BackendService.handleError));
   }
 
@@ -55,7 +55,7 @@ export class BackendService {
   }
 
   createTransaction(transaction: NewTransaction) {
-    return this.http.post<Transaction>(BackendService.url('transactions'), transaction, httpOptions)
+    return this.http.post<Transaction>(BackendService.url('transactions'), transaction, this.httpOptions)
       .pipe(catchError(BackendService.handleError));
   }
 
@@ -63,7 +63,7 @@ export class BackendService {
     return this.http.put<Transaction>(
       BackendService.url(`transactions/${transactionId}`),
       updatedTransaction,
-      httpOptions,
+      this.httpOptions,
     ).pipe(catchError(BackendService.handleError));
   }
 
@@ -79,21 +79,21 @@ export class BackendService {
     return this.http.get<Category[]>(BackendService.url('categories'));
   }
 
-  createCategory(category: Category) {
-    return this.http.post<Category>(BackendService.url('categories'), category, httpOptions)
+  createCategory(category: CreateCategory) {
+    return this.http.post<Category>(BackendService.url('categories'), category, this.httpOptions)
       .pipe(catchError(BackendService.handleError));
   }
 
-  updateCategory(categoryName: string, updatedCategory: UpdateCategory) {
+  updateCategory(categoryId: number, updatedCategory: UpdateCategory) {
     return this.http.put<Category>(
-      BackendService.url(`categories/${categoryName}`),
+      BackendService.url(`categories/${categoryId}`),
       updatedCategory,
-      httpOptions,
+      this.httpOptions,
     ).pipe(catchError(BackendService.handleError));
   }
 
-  deleteCategory(categoryName: string) {
-    return this.http.delete(BackendService.url(`categories/${categoryName}`))
+  deleteCategory(categoryId: number) {
+    return this.http.delete(BackendService.url(`categories/${categoryId}`))
       .pipe(catchError(BackendService.handleError));
   }
 

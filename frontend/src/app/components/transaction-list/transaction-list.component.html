@@ -1,15 +1,15 @@
-<h3 *ngIf="search.term && (g.transactions | searchFilter:search.term).length !== 0">
+<h3 *ngIf="search.term && (g.transactions | searchFilter:search.term).length > 0" class="mb-4">
   {{ (g.transactions | recurrence | searchFilter:search.term).length }} search results
   <small class="text-muted">for "{{ search.term }}"</small>
 </h3>
 
-<div class="row mb-2" *ngIf="!search.term">
+<div class="row mb-2" *ngIf="!search.term && g.transactions.length > 0">
   <div class="text-right w-100">
     <span class="text-muted">Beginning Balance:</span>
     <strong class="col text-right text-large">{{ g.transactions | empty | totalAccountBalance | currency:'EUR' }}</strong>
   </div>
 </div>
-<div class="row mb-2">
+<div class="row mb-2" *ngIf="!search.term && g.transactions.length > 0">
   <div class="col-2 col-md-3 text-muted">
     Date
   </div>
@@ -26,7 +26,7 @@
   </div>
 </div>
 <div *ngFor="let t of (g.transactions | searchFilter:search.term | recurrence | sortTransactions)"
-     class="row transaction" [style.border-left-color]="t.category === null ? 'white' : g.getCategory(t.category).color"
+     class="row transaction" [style.border-left-color]="t.category === 0 ? 'white' : g.getCategory(t.category).color"
      [routerLink]="['/edit', t.id]">
   <span class="col-2 col-md-3">
     <span class="d-none d-md-inline">{{ t.timestamp | date:'longDate' }}</span>
@@ -35,7 +35,7 @@
     {{ t.timestamp | date:'HH:mm' }}
   </span>
   <span class="col col-lg-2">
-    {{ t.category }}
+    {{ t.category === 0 ? '' : g.getCategory(t.category).name }}
     <div class="d-md-none">
       {{ t.notes }}
     </div>
@@ -49,19 +49,19 @@
     <span [class.text-success]="t.amount > 0" [class.text-danger]="t.amount < 0">{{ t.amount | currency:'EUR' }}</span>
   </span>
 </div>
-<div *ngIf="!search.term && g.transactions.length == 0" class="text-muted">
+<div *ngIf="!search.term && g.transactions.length === 0" class="text-muted">
   No transactions found. Create one now:
-  <button class="btn btn-primary" routerLink="/create">
+  <button class="btn btn-primary ml-1" routerLink="/create">
     <span class="oi oi-plus"></span>
   </button>
 </div>
 <div *ngIf="search.term && (g.transactions | searchFilter:search.term).length === 0" class="text-muted">
   No transactions matching "{{ search.term }}" found.
 </div>
-<hr class="double-line" *ngIf="!search.term">
-<div class="row" *ngIf="!search.term">
+<hr class="double-line" *ngIf="!search.term && g.transactions.length > 0">
+<div class="row" *ngIf="!search.term && g.transactions.length > 0">
   <div class="text-right w-100">
     <span class="text-muted">Ending Balance:</span>
-    <strong class="col text-large">{{ g.transactions | recurrence | totalAccountBalance | currency:'EUR' }}</strong>
+    <strong class="col text-large" id="ending-balance">{{ g.transactions | recurrence | totalAccountBalance | currency:'EUR' }}</strong>
   </div>
 </div>

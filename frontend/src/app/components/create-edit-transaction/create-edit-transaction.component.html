@@ -38,12 +38,12 @@
     <div class="col">
       <select
         class="form-control custom-select" formControlName="category" id="input-category">
-        <option [value]="null" class="text-dark bg-white">
+        <option [value]="0" class="text-dark bg-white">
           No category
         </option>
         <option *ngFor="let c of g.categories"
                 [style.background-color]="c.color"
-                [value]="c.name">{{ c.name }}
+                [value]="c.id">{{ c.name }}
         </option>
       </select>
     </div>
@@ -95,7 +95,7 @@
           </option>
         </select>
       </div>
-      <div class="input-group col"
+      <div class="input-group col pr-0"
            *ngIf="form.value.recurrenceType === recurrenceType.Custom">
         <div class="input-group-prepend">
           <span class="input-group-text">Every</span>
@@ -107,7 +107,7 @@
         </div>
       </div>
     </div>
-    <div class="input-group col-10 offset-2 col-lg-3 offset-lg-0"
+    <div class="input-group col-10 offset-2 col-lg-3 offset-lg-0 mt-2 mt-lg-0"
          *ngIf="form.value.recurrenceType !== recurrenceType.None">
       <input type="number"
              class="form-control" formControlName="recurrenceAmount">
