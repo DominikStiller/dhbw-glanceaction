@@ -222,7 +222,7 @@ router.put('/transactions/:id([0-9]+)', [
       return res.status(500).send();
     }
     if (!transaction) {
-      return res.status(404).json({ error: { name: 'TransactionUndefinedError', message: 'The transaction to be changed doesn\'t exist' } });
+      return res.status(404).json({ error: { name: 'TransactionUndefinedError', message: "The transaction to be changed doesn't exist" } });
     }
     transactions.update({ _id: transactionId }, {
       $set: {
@@ -255,7 +255,7 @@ router.delete('/transactions/:id([0-9]+)', (req, res) => {
       return res.status(500).send();
     }
     if (!transaction) {
-      return res.status(404).json({ error: { name: 'TransactionUndefinedError', message: 'The transaction to be deleted doesn\'t exist' } });
+      return res.status(404).json({ error: { name: 'TransactionUndefinedError', message: "The transaction to be deleted doesn't exist" } });
     }
     transactions.remove({ _id: transactionId }, (innerErr) => {
       if (innerErr) {
