@@ -18,6 +18,7 @@ router.get('/transactions', (req, res) => {
   util.log(util.format('/api/transactions/ - GET-Request'));
   transactions.find().toArray((error, list) => {
     list.forEach((transaction, index, traArr) => {
+      // For sending the JSON data in the response, the _id field is converted to id in each transaction object
       traArr[index] = changeIdOfObject(transaction);
     });
     res.json(list);
@@ -26,6 +27,7 @@ router.get('/transactions', (req, res) => {
 
 
 router.post('/transactions', [
+  // Verification of the input data as follows:
   check('amount')
     .not()
     .isEmpty()
@@ -101,6 +103,7 @@ router.post('/transactions', [
 ], (req, res) => {
   util.log(util.format('/api/transactions/ - POST-Request: %j', req.body));
 
+  // Checking if there are no additional fields apart from the ones specified for the transaction model:
   const keys = Object.keys(req.body);
   for (let i = 0; i < keys.length; i += 1) {
     if (transactionKeys.indexOf(keys[i]) < 0) {
@@ -108,11 +111,13 @@ router.post('/transactions', [
     }
   }
 
+  // Checking for an error in the validation above:
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ error: { name: 'TransactionVerificationError', message: errors.array()[0].msg } });
   }
 
+  // After the verification, insert the new transaction object after setting the id field to _id:
   transactions.insert(req.body, (error, result) => {
     transactions.findOne(result, (innerError, updatedResult) => {
       res.status(201).send(changeIdOfObject(updatedResult));
@@ -122,6 +127,7 @@ router.post('/transactions', [
 
 
 router.put('/transactions/:id([0-9]+)', [
+  // Verification of the input data as follows:
   check('amount')
     .not()
     .isEmpty()
@@ -197,6 +203,7 @@ router.put('/transactions/:id([0-9]+)', [
 ], (req, res) => {
   util.log(util.format('/api/transactions/%i - PUT-Request: %j', req.params.id, req.body));
 
+  // Checking if there are no additional fields apart from the ones specified for the transaction model:
   const keys = Object.keys(req.body);
   for (let i = 0; i < keys.length; i += 1) {
     if (transactionKeys.indexOf(keys[i]) < 0) {
@@ -204,6 +211,7 @@ router.put('/transactions/:id([0-9]+)', [
     }
   }
 
+  // Checking for an error in the validation above:
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ error: { name: 'TransactionVerificationError', message: errors.array()[0].msg } });
@@ -217,10 +225,12 @@ router.put('/transactions/:id([0-9]+)', [
   const newNotes = req.body.notes;
   const transactionId = req.params.id;
 
+  // After the verification, update the new transaction object after setting the id field to _id:
   transactions.findOne({ _id: transactionId }, (err, transaction) => {
     if (err) {
       return res.status(500).send();
     }
+    // Make sure the transaction to be changed exists:
     if (!transaction) {
       return res.status(404).json({ error: { name: 'TransactionUndefinedError', message: "The transaction to be changed doesn't exist" } });
     }
@@ -250,6 +260,7 @@ router.delete('/transactions/:id([0-9]+)', (req, res) => {
 
   const transactionId = req.params.id;
 
+  // Search for the transaction to be deleted and delete it if it was found:
   transactions.findOne({ _id: transactionId }, (err, transaction) => {
     if (err) {
       return res.status(500).send();
