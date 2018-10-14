@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BackendService } from './backend.service';
 import { NewTransaction, Transaction, UpdateTransaction } from '../models/transaction';
-import { Category, CreateCategory, UpdateCategory } from '../models/category';
+import { Category, NewCategory, UpdateCategory } from '../models/category';
 import { Account, NewAccount, UpdateAccount } from '../models/account';
 import { tap } from 'rxjs/operators';
 import { Subject, forkJoin } from 'rxjs';
@@ -106,7 +106,7 @@ export class GlanceactionService {
     return this.categories.find(c => c.id === id);
   }
 
-  createCategory(category: CreateCategory) {
+  createCategory(category: NewCategory) {
     return this.backend.createCategory(category)
       .pipe(tap((c => this.categories.push(c))));
   }

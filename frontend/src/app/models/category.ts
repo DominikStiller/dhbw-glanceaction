@@ -4,7 +4,7 @@ export class Category {
   color?: string;
 }
 
-export class CreateCategory {
+export class NewCategory {
   name: string;
   color?: string;
 }
