@@ -15,6 +15,7 @@ const files = {
   ],
 };
 
+// Task for linting all source files.
 gulp.task('lintSources', () => {
   return gulp.src(files.projectSources)
     .pipe(eslint({ configFile: '.eslintrc.json' }))
@@ -22,17 +23,20 @@ gulp.task('lintSources', () => {
     .pipe(eslint.failAfterError());
 });
 
+// Task for minyfying all source files.
 gulp.task('minifySources', () => {
   return gulp.src(files.projectSources)
     .pipe(uglify())
     .pipe(gulp.dest('./build'));
 });
 
+// Task to clean the build directory.
 gulp.task('cleanBuild', () => {
   return gulp.src('./build', { read: false })
     .pipe(clean());
 });
 
+// Task to create a documentation (which is not big for the backend, but it works, and was understood).
 gulp.task('createDocumentation', (cb) => {
   gulp.src(files.projectSources, { read: false })
     .pipe(jsdoc(config, cb));

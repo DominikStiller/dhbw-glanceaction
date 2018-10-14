@@ -17,6 +17,7 @@ router.get('/categories', (req, res) => {
   util.log(util.format('/api/categories/ - GET-Request'));
   categories.find().toArray((error, list) => {
     list.forEach((category, index, catArr) => {
+      // For sending the JSON data in the response, the _id field is converted to id in each category object
       catArr[index] = changeIdOfObject(category);
     });
     res.json(list);
@@ -25,6 +26,7 @@ router.get('/categories', (req, res) => {
 
 
 router.post('/categories', [
+  // Verification of the input data as follows:
   check('name')
     .trim()
     .not()
@@ -40,17 +42,21 @@ router.post('/categories', [
   util.log(util.format('/api/categories/ - POST-Request: %j', req.body));
 
   const keys = Object.keys(req.body);
+
+  // Checking if there are no additional fields apart from the ones specified for the category model:
   for (let i = 0; i < keys.length; i += 1) {
     if (categoryKeys.indexOf(keys[i]) < 0) {
       return res.status(404).json({ error: { name: 'CategoryInvalidFieldError', message: 'The category may only contain the specified fields' } });
     }
   }
 
+  // Checking for an error in the validation above:
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ error: { name: 'CategoryValidationError', message: errors.array()[0].msg } });
   }
 
+  // After the verification, insert the new category object after setting the id field to _id:
   categories.insert(req.body, (error, result) => {
     categories.findOne(result, (innerError, updatedResult) => {
       res.status(201).send(changeIdOfObject(updatedResult));
@@ -60,6 +66,7 @@ router.post('/categories', [
 
 
 router.put('/categories/:id([0-9]+)', [
+  // Verification of the input data as follows:
   check('name')
     .trim()
     .not()
@@ -74,6 +81,7 @@ router.put('/categories/:id([0-9]+)', [
 ], (req, res) => {
   util.log(util.format('/api/categories/%i - PUT-Request: %j', req.params.id, req.body));
 
+  // Checking if there are no additional fields apart from the ones specified for the category model:
   const keys = Object.keys(req.body);
   for (let i = 0; i < keys.length; i += 1) {
     if (categoryKeys.indexOf(keys[i]) < 0) {
@@ -81,6 +89,7 @@ router.put('/categories/:id([0-9]+)', [
     }
   }
 
+  // Checking for an error in the validation above:
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ error: { name: 'CategoryValidationError', message: errors.array()[0].msg } });
@@ -90,10 +99,12 @@ router.put('/categories/:id([0-9]+)', [
   const newColor = req.body.color;
   const categoryId = req.params.id;
 
+  // After the verification, update the new category object after setting the id field to _id:
   categories.findOne({ _id: categoryId }, (err, category) => {
     if (err) {
       return res.status(500).send();
     }
+    // Make sure the category to be changed exists:
     if (!category) {
       return res.status(404).json({ error: { name: 'CategoryUndefinedError', message: 'The category to be changed doesn\'t exist' } });
     }
@@ -113,6 +124,7 @@ router.delete('/categories/:id([0-9]+)', (req, res) => {
   util.log(util.format('/api/categories/%i - DELETE-Request', req.params.id));
   const categoryId = req.params.id;
 
+  // Search for the category to be deleted and delete it if it was found:
   categories.findOne({ _id: categoryId }, (err, category) => {
     if (err) {
       return res.status(500).send();
