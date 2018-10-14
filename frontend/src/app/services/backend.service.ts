@@ -4,7 +4,7 @@ import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { environment } from '../../environments/environment';
-import { Category, CreateCategory, UpdateCategory } from '../models/category';
+import { Category, NewCategory, UpdateCategory } from '../models/category';
 import { Account, NewAccount, UpdateAccount } from '../models/account';
 import { NewTransaction, Transaction, UpdateTransaction } from '../models/transaction';
 
@@ -79,7 +79,7 @@ export class BackendService {
     return this.http.get<Category[]>(BackendService.url('categories'));
   }
 
-  createCategory(category: CreateCategory) {
+  createCategory(category: NewCategory) {
     return this.http.post<Category>(BackendService.url('categories'), category, this.httpOptions)
       .pipe(catchError(BackendService.handleError));
   }

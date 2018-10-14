@@ -18,7 +18,7 @@ export class SearchFilterPipe implements PipeTransform {
     const s = searchTerm.toLowerCase();
     return transactions.filter((t) => {
       return (t.category !== 0 && this.g.getCategory(t.category).name.toLowerCase().includes(s))
-        || t.notes.toLowerCase().includes(s);
+        || (t.notes && t.notes.toLowerCase().includes(s));
     });
   }
 }

@@ -2,9 +2,13 @@ import { async, inject, TestBed } from '@angular/core/testing';
 
 import { BackendService } from './backend.service';
 import { HttpClientModule } from '@angular/common/http';
-import { Category, UpdateCategory } from '../models/category';
+import { Category, NewCategory, UpdateCategory } from '../models/category';
 import { Account, NewAccount, UpdateAccount } from '../models/account';
 import { NewTransaction, Transaction, UpdateTransaction } from '../models/transaction';
+
+// CONFIG
+// Existing account id necesary to create transaction
+const existingAccountId = 21;
 
 describe('BackendService', () => {
   beforeEach(() => TestBed.configureTestingModule({
@@ -24,18 +28,13 @@ describe('BackendService', () => {
         name: 'newaccount',
         initialBalance: 500.39,
       };
-      const newAccountExpected = jasmine.objectContaining({
-        name: 'newaccount',
-        balance: 500.39,
-      });
+      // Use objectContaining because an id field is added
+      const newAccountExpected = jasmine.objectContaining(newAccount);
       const updateAccount: UpdateAccount = {
         name: 'updatedname',
         initialBalance: 400,
       };
-      const updateAccountExpected = jasmine.objectContaining({
-        name: 'updatedname',
-        balance: 400,
-      });
+      const updateAccountExpected = jasmine.objectContaining(updateAccount);
       // Do a full CRUD test with interspersed READ checks
       backend.getAccounts().subscribe((accounts) => {
         // Check that newAccount does not exist
@@ -47,14 +46,14 @@ describe('BackendService', () => {
           backend.getAccounts().subscribe((accounts) => {
             expect(accounts).toContain(newAccountExpected);
             // UPDATE
-            backend.updateAccount(createdAccount, updateAccount)
+            backend.updateAccount(createdAccount.id, updateAccount)
               .subscribe((updatedAccount: Account) => {
                 expect(updatedAccount).toEqual(updateAccountExpected);
                 backend.getAccounts().subscribe((accounts) => {
                   expect(accounts).toContain(updateAccountExpected);
                   expect(accounts).not.toContain(newAccountExpected);
                   // DELETE
-                  backend.deleteAccount(updatedAccount).subscribe(() => {
+                  backend.deleteAccount(updatedAccount.id).subscribe(() => {
                     backend.getAccounts().subscribe((accounts) => {
                       expect(accounts).not.toContain(updateAccountExpected);
                     });
@@ -72,42 +71,39 @@ describe('BackendService', () => {
     inject([BackendService], (backend: BackendService) => {
       const newTransaction: NewTransaction = {
         amount: 25,
-        account: 3,
-        category: 'Food',
-        timestamp: new Date(),
+        account: existingAccountId,
+        category: 0,
+        timestamp: new Date().toISOString(),
+        recurrence: 'm 5',
       };
-      const updateTransaction: UpdateTransaction = {
-        category: 'Vacation',
+      const newTransactionExpected = jasmine.objectContaining(newTransaction);
+      const updateTransaction: UpdateTransaction = Object.assign({}, newTransaction, {
+        amount: -17.35,
         notes: 'Test Notes',
-      };
-      const newAndUpdateTransaction: UpdateTransaction = {
-        ...newTransaction,
-        ...updateTransaction,
-      };
+      });
+      const updateTransactionExpected = jasmine.objectContaining(updateTransaction);
       // Do a full CRUD test with interspersed READ checks
       backend.getTransactions().subscribe((transactions) => {
         // Check that newTransaction does not exist
-        expect(transactions).not.toContain(jasmine.objectContaining(newTransaction));
+        expect(transactions).not.toContain(newTransactionExpected);
         // CREATE
         backend.createTransaction(newTransaction).subscribe((createdTransaction: Transaction) => {
-          expect(createdTransaction).toEqual(jasmine.objectContaining(newTransaction));
+          expect(createdTransaction).toEqual(newTransactionExpected);
           // READ
           backend.getTransactions().subscribe((transactions) => {
-            expect(transactions).toContain(jasmine.objectContaining(newTransaction));
+            expect(transactions).toContain(newTransactionExpected);
             // UPDATE
-            backend.updateTransaction(createdTransaction, updateTransaction)
+            backend.updateTransaction(createdTransaction.id, updateTransaction)
               .subscribe((updatedTransaction: Transaction) => {
-                expect(updatedTransaction).toEqual(
-                  jasmine.objectContaining(newAndUpdateTransaction));
+                expect(updatedTransaction).toEqual(updateTransactionExpected);
                 backend.getTransactions().subscribe((transactions) => {
-                  expect(transactions).toContain(jasmine.objectContaining(newAndUpdateTransaction));
-                  expect(transactions).not.toContain(
-                    jasmine.objectContaining(newAndUpdateTransaction));
+                  expect(transactions).toContain(updateTransactionExpected);
+                  expect(transactions).not.toContain(newTransactionExpected);
                   // DELETE
-                  backend.deleteTransaction(updatedTransaction).subscribe(() => {
+                  backend.deleteTransaction(updatedTransaction.id).subscribe(() => {
                     backend.getTransactions().subscribe((transactions) => {
                       expect(transactions)
-                        .not.toContain(jasmine.objectContaining(newAndUpdateTransaction));
+                        .not.toContain(updateTransactionExpected);
                     });
                   });
                 });
@@ -121,37 +117,39 @@ describe('BackendService', () => {
 
   it('should create, read, update and delete a category', async(
     inject([BackendService], (backend: BackendService) => {
-      const newCategory: Category = {
+      const newCategory: NewCategory = {
         name: 'newcategory',
         color: '#aabbcc',
       };
+      const newCategoryExpected = jasmine.objectContaining(newCategory);
       const updateCategory: UpdateCategory = {
         name: 'updatedname',
         color: '#112233',
       };
+      const updateCategoryExpected = jasmine.objectContaining(updateCategory);
       // Do a full CRUD test with interspersed READ checks
       backend.getCategories().subscribe((categories) => {
         // Check that newCategory does not exist
-        expect(categories).not.toContain(newCategory);
+        expect(categories).not.toContain(newCategoryExpected);
         // CREATE
         backend.createCategory(newCategory).subscribe((createdCategory: Category) => {
-          expect(createdCategory).toEqual(newCategory);
+          expect(createdCategory).toEqual(newCategoryExpected);
           // READ
           backend.getCategories().subscribe((categories) => {
-            expect(categories).toContain(newCategory);
+            expect(categories).toContain(newCategoryExpected);
             // UPDATE
-            backend.updateCategory(createdCategory, updateCategory)
+            backend.updateCategory(createdCategory.id, updateCategory)
               .subscribe((updatedCategory: Category) => {
                 // @ts-ignore
-                expect(updatedCategory).toEqual(updateCategory);
+                expect(updatedCategory).toEqual(updateCategoryExpected);
                 backend.getCategories().subscribe((categories) => {
                   // @ts-ignore
-                  expect(categories).toContain(updateCategory);
-                  expect(categories).not.toContain(newCategory);
+                  expect(categories).toContain(updateCategoryExpected);
+                  expect(categories).not.toContain(newCategoryExpected);
                   // DELETE
-                  backend.deleteCategory(updatedCategory).subscribe(() => {
+                  backend.deleteCategory(updatedCategory.id).subscribe(() => {
                     backend.getCategories().subscribe((categories) => {
-                      expect(categories).not.toContain(updatedCategory);
+                      expect(categories).not.toContain(updateCategoryExpected);
                     });
                   });
                 });
