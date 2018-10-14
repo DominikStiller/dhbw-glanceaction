@@ -1,27 +1,36 @@
-# Frontend
+# GlanceAction Frontend
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.2.3.
+These are the instructions for executing the frontend of GlanceAction.
 
-## Development server
+## Requirements
+* NPM
+* NodeJS
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Installation
+```
+$ npm install
+```
 
-## Code scaffolding
+## Running the frontend
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Run `npm run start` in the frontend folder for a development server. Navigate to `http://localhost:4200/` to view and use the frontend.
 
-## Build
+Please start the backend server first.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+## Building for production
+
+Run `npm run build` to build the project for production.
+The build artifacts will be stored in the `dist/` directory and can then be deployed to the production server.
+
+Please refer to the official Angular documentation for [configuration details](https://angular.io/guide/deployment#server-configuration).
 
 ## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Run `npm run test` to execute the unit tests.
 
 ## Running end-to-end tests
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+Run `npm run e2e` to execute the end-to-end tests.
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+## Linting
+Run `npm run lint` to execute TSLint.
