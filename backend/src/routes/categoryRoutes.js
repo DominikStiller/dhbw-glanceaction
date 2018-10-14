@@ -3,6 +3,7 @@ const express = require('express');
 const util = require('util');
 const { check, validationResult } = require('express-validator/check');
 const { db } = require('../database');
+const { changeIdOfObject } = require('../services/responseFormatting');
 
 const categories = db.collection('Categories');
 const transactions = db.collection('Transactions');
@@ -10,22 +11,13 @@ const categoryKeys = ['name', 'color'];
 
 const router = express.Router();
 
-// Formatting Functions //
-
-function changeIdOfCategory(category) {
-  const listCategory = category;
-  listCategory.id = listCategory._id;
-  delete listCategory._id;
-  return listCategory;
-}
-
 // REST Endpoints //
 
 router.get('/categories', (req, res) => {
   util.log(util.format('/api/categories/ - GET-Request'));
   categories.find().toArray((error, list) => {
     list.forEach((category, index, catArr) => {
-      catArr[index] = changeIdOfCategory(category);
+      catArr[index] = changeIdOfObject(category);
     });
     res.json(list);
   });
@@ -75,7 +67,7 @@ router.post('/categories', [
 
   categories.insert(req.body, (error, result) => {
     categories.findOne(result, (innerError, updatedResult) => {
-      res.status(201).send(changeIdOfCategory(updatedResult));
+      res.status(201).send(changeIdOfObject(updatedResult));
     });
   });
 });
@@ -138,7 +130,7 @@ router.put('/categories/:id([0-9]+)', [
         return res.status(500).send();
       }
       categories.findOne({ _id: categoryId }, (nextErr, updatedResult) => {
-        res.status(201).send(changeIdOfCategory(updatedResult));
+        res.status(201).send(changeIdOfObject(updatedResult));
       });
     });
   });

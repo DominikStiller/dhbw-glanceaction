@@ -11,14 +11,14 @@
 {"_id":7,"_uid":7,"_dt":1539324659060,"_s":"0944e233b3dc1f58053a32b82459e9b7"}
 {"name":"Bestechungsgeld Web-Engineering","amount":"100.00","category":"DHBW","recurrence":"3 8","account":"15","timestamp":"2018-01-01","_id":{"$wrap":"$oid","v":7}}
 {"k":"0000000080","o":"0000000163","v":"001"}
-{"_id":18,"_uid":18,"_dt":1539458629425,"_s":"58b0575f40113b57dfd91a5b9dbbb645"}
-{"name":"72vdasd91fhar473","amount":2.33,"category":0,"recurrence":"0 0","account":17,"timestamp":"2018-01-01","notes":"Some notes.","_id":{"$wrap":"$oid","v":18}}
+{"_id":23,"_uid":23,"_dt":1539500482211,"_s":"e1de84c52c4caa9b29708b5b7a2daab0"}
+{"name":"72vdasd91fhar473","amount":2.33,"category":0,"recurrence":"0 0","account":27,"timestamp":"2018-01-01","notes":"Some notes.","_id":{"$wrap":"$oid","v":23}}
 {"k":"0000000051","o":"0000000000","v":"001"}
-{"_id":18,"_uid":18,"_dt":1539458629447,"_a":"del"}
+{"_id":23,"_uid":23,"_dt":1539500482242,"_a":"del"}
 
 {"k":"0000000080","o":"0000000163","v":"001"}
-{"_id":19,"_uid":19,"_dt":1539458677947,"_s":"fafbb679b745c8fd09d10938eb95e933"}
-{"name":"72vdasd91fhar473","amount":2.33,"category":0,"recurrence":"0 0","account":19,"timestamp":"2018-01-01","notes":"Some notes.","_id":{"$wrap":"$oid","v":19}}
+{"_id":24,"_uid":24,"_dt":1539501266709,"_s":"d5803967a2cb1355fa2e8c757cda975c"}
+{"name":"72vdasd91fhar473","amount":2.33,"category":0,"recurrence":"0 0","account":29,"timestamp":"2018-01-01","notes":"Some notes.","_id":{"$wrap":"$oid","v":24}}
 {"k":"0000000051","o":"0000000000","v":"001"}
-{"_id":19,"_uid":19,"_dt":1539458677963,"_a":"del"}
+{"_id":24,"_uid":24,"_dt":1539501266729,"_a":"del"}
 
