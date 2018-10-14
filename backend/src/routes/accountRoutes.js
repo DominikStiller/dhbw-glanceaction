@@ -3,6 +3,7 @@ const express = require('express');
 const util = require('util');
 const { check, validationResult } = require('express-validator/check');
 const { db } = require('../database');
+const { changeIdOfObject } = require('../services/responseFormatting');
 
 const accounts = db.collection('Accounts');
 const transactions = db.collection('Transactions');
@@ -10,22 +11,13 @@ const accountKeys = ['name', 'initialBalance'];
 
 const router = express.Router();
 
-// Formatting Functions //
-
-function changeIdOfAccount(account) {
-  const listAccount = account;
-  listAccount.id = listAccount._id;
-  delete listAccount._id;
-  return listAccount;
-}
-
 // REST Endpoints //
 
 router.get('/accounts', (req, res) => {
   util.log(util.format('/api/accounts/ - GET-Request'));
   accounts.find().toArray((error, list) => {
     list.forEach((account, index, accArr) => {
-      accArr[index] = changeIdOfAccount(account);
+      accArr[index] = changeIdOfObject(account);
     });
     res.json(list);
   });
@@ -66,7 +58,7 @@ router.post('/accounts', [
 
   accounts.insert(req.body, (error, result) => {
     accounts.findOne(result, (innerError, updatedResult) => {
-      res.status(201).send(changeIdOfAccount(updatedResult));
+      res.status(201).send(changeIdOfObject(updatedResult));
     });
   });
 });
@@ -121,7 +113,7 @@ router.put('/accounts/:id([0-9]+)', [
         return res.status(500).send();
       }
       accounts.findOne({ _id: accountId }, (nextErr, updatedResult) => {
-        res.status(201).send(changeIdOfAccount(updatedResult));
+        res.status(201).send(changeIdOfObject(updatedResult));
       });
     });
   });

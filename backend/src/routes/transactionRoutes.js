@@ -3,6 +3,7 @@ const express = require('express');
 const util = require('util');
 const { check, validationResult } = require('express-validator/check');
 const { db } = require('../database');
+const { changeIdOfObject } = require('../services/responseFormatting');
 
 const transactions = db.collection('Transactions');
 const categories = db.collection('Categories');
@@ -11,22 +12,13 @@ const transactionKeys = ['name', 'amount', 'category', 'account', 'timestamp', '
 
 const router = express.Router();
 
-// Formatting Functions //
-
-function changeIdOfTransaction(transaction) {
-  const listTransaction = transaction;
-  listTransaction.id = listTransaction._id;
-  delete listTransaction._id;
-  return listTransaction;
-}
-
 // REST Endpoints //
 
 router.get('/transactions', (req, res) => {
   util.log(util.format('/api/transactions/ - GET-Request'));
   transactions.find().toArray((error, list) => {
     list.forEach((transaction, index, traArr) => {
-      traArr[index] = changeIdOfTransaction(transaction);
+      traArr[index] = changeIdOfObject(transaction);
     });
     res.json(list);
   });
@@ -123,7 +115,7 @@ router.post('/transactions', [
 
   transactions.insert(req.body, (error, result) => {
     transactions.findOne(result, (innerError, updatedResult) => {
-      res.status(201).send(changeIdOfTransaction(updatedResult));
+      res.status(201).send(changeIdOfObject(updatedResult));
     });
   });
 });
@@ -246,7 +238,7 @@ router.put('/transactions/:id([0-9]+)', [
         return res.status(500).send();
       }
       transactions.findOne({ _id: transactionId }, (nextErr, updatedResult) => {
-        return res.status(201).send(changeIdOfTransaction(updatedResult));
+        return res.status(201).send(changeIdOfObject(updatedResult));
       });
     });
   });
