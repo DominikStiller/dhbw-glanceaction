@@ -293,7 +293,7 @@ components:
           type: string
         recurrence:
           type: string
-          description: "Format: 'i n'<br>i: Interval of recurrence in days or 'm' for monthly<br>n: Amount of recurrences<br>'0 0' to disable"
+          description: "Format: 'i n'<br>i: Interval of recurrence in days or 'm' for monthly recurrence<br>n: Amount of recurrences (additional to original transaction)<br>'0 0' to disable"
     NewTransaction:
       type: object
       required:

@@ -1,6 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+
 import { GlanceactionService } from '../../services/glanceaction.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SearchService } from '../../services/search.service';
 
 @Component({
@@ -11,8 +11,7 @@ import { SearchService } from '../../services/search.service';
 export class TransactionListComponent implements OnInit {
 
   constructor(public g: GlanceactionService,
-              public search: SearchService,
-              private modalService: NgbModal) {
+              public search: SearchService) {
   }
 
   ngOnInit() {

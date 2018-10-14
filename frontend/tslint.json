@@ -7,6 +7,7 @@
     ],
     "no-trailing-whitespace": false,
     "object-literal-shorthand": false,
-    "prefer-const": [true, {"destructuring": "all"}]
+    "prefer-const": [true, {"destructuring": "all"}],
+    "one-variable-per-declaration": false
   }
 }

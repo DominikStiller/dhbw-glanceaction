@@ -74,6 +74,7 @@ describe('BackendService', () => {
         account: existingAccountId,
         category: 0,
         timestamp: new Date().toISOString(),
+        notes: '',
         recurrence: 'm 5',
       };
       const newTransactionExpected = jasmine.objectContaining(newTransaction);

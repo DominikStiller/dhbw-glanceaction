@@ -68,5 +68,6 @@ export class AppPage {
   deleteTransaction(transaction: ElementFinder) {
     transaction.click();
     this.getDeleteTransactionButton().click();
+    browser.switchTo().alert().accept();
   }
 }

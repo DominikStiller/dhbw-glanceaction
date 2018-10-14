@@ -1,11 +1,13 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { NewTransaction, Transaction } from '../../models/transaction';
-import { GlanceactionService } from '../../services/glanceaction.service';
-import { NgbDateStruct, NgbCalendar, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DatePipe, Location } from '@angular/common';
-import { Recurrence, RecurrenceType } from '../../models/recurrence';
 import { ActivatedRoute } from '@angular/router';
+
+import { NgbDateStruct, NgbCalendar, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+
+import { NewTransaction, Transaction } from '../../models/transaction';
+import { Recurrence, RecurrenceType } from '../../models/recurrence';
+import { GlanceactionService } from '../../services/glanceaction.service';
 
 @Component({
   selector: 'app-create-edit-transaction',
@@ -70,7 +72,9 @@ export class CreateEditTransactionComponent implements OnInit {
   }
 
   delete() {
-    this.g.deleteTransaction(this.transactionId).subscribe(this.navigateBack);
+    if (confirm('Do you really want to delete this transaction"?')) {
+      this.g.deleteTransaction(this.transactionId).subscribe(this.navigateBack);
+    }
   }
 }
 
