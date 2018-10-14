@@ -31,21 +31,7 @@ router.post('/categories', [
     .isEmpty()
     .withMessage('Name may not be empty')
     .matches(/^[a-zA-Z0-9\s]+$/)
-    .withMessage('Name can only contain letters, spaces or numbers')
-    .custom((value, { req }) => {
-      return new Promise((resolve, reject) => {
-        const regex = new RegExp(['^', req.body.name, '$'].join(''), 'i');
-        categories.findOne({ name: regex }, (err, category) => {
-          if (err) {
-            reject(new Error('Server Error'));
-          }
-          if (category) {
-            reject(new Error('This category name already exists'));
-          }
-          resolve(true);
-        });
-      });
-    }),
+    .withMessage('Name can only contain letters, spaces or numbers'),
   check('color')
     .trim()
     .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/)
@@ -80,21 +66,7 @@ router.put('/categories/:id([0-9]+)', [
     .isEmpty()
     .withMessage('Name may not be empty')
     .matches(/^[a-zA-Z0-9\s]+$/)
-    .withMessage('Name can only contain letters, spaces or numbers')
-    .custom((value, { req }) => {
-      return new Promise((resolve, reject) => {
-        const regex = new RegExp(['^', req.body.name, '$'].join(''), 'i');
-        categories.findOne({ name: regex }, (err, category) => {
-          if (err) {
-            reject(new Error('Server Error'));
-          }
-          if (category) {
-            reject(new Error('This category name already exists'));
-          }
-          resolve(true);
-        });
-      });
-    }),
+    .withMessage('Name can only contain letters, spaces or numbers'),
   check('color')
     .trim()
     .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/)
