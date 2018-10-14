@@ -38,8 +38,8 @@ router.post('/categories', [
     .not()
     .isEmpty()
     .withMessage('Name may not be empty')
-    .matches(/^[a-zA-Z0-9]+$/)
-    .withMessage('Name can only contain letters or numbers')
+    .matches(/^[a-zA-Z0-9\s]+$/)
+    .withMessage('Name can only contain letters, spaces or numbers')
     .custom((value, { req }) => {
       return new Promise((resolve, reject) => {
         const regex = new RegExp(['^', req.body.name, '$'].join(''), 'i');
@@ -87,8 +87,8 @@ router.put('/categories/:id([0-9]+)', [
     .not()
     .isEmpty()
     .withMessage('Name may not be empty')
-    .matches(/^[a-zA-Z0-9]+$/)
-    .withMessage('Name can only contain letters or numbers')
+    .matches(/^[a-zA-Z0-9\s]+$/)
+    .withMessage('Name can only contain letters, spaces or numbers')
     .custom((value, { req }) => {
       return new Promise((resolve, reject) => {
         const regex = new RegExp(['^', req.body.name, '$'].join(''), 'i');
@@ -96,7 +96,7 @@ router.put('/categories/:id([0-9]+)', [
           if (err) {
             reject(new Error('Server Error'));
           }
-          if (Boolean(category) && req.params.name !== req.body.name) {
+          if (category) {
             reject(new Error('This category name already exists'));
           }
           resolve(true);
