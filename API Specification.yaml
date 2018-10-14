@@ -251,6 +251,9 @@ components:
           format: float
     UpdateAccount:
       type: object
+      required:
+        - name
+        - initialBalance
       properties:
         name:
           type: string
@@ -262,8 +265,11 @@ components:
       required:
         - id
         - amount
+        - category
         - account
         - timestamp
+        - notes
+        - recurrence
       properties:
         id:
           type: integer
@@ -275,6 +281,7 @@ components:
         category:
           type: integer
           format: int32
+          description: "Id of the category this transaction is assigned to<br>'0': no category"
         account:
           type: integer
           format: int32
@@ -286,13 +293,16 @@ components:
           type: string
         recurrence:
           type: string
-          description: "Format: 'i n'<br>i: Interval of recurrence in days or 'm' for monthly<br>n: Amount of recurrences<br>'0 0' to disable"
+          description: "Format: 'i n'<br>i: Interval of recurrence in days or 'm' for monthly recurrence<br>n: Amount of recurrences (additional to original transaction)<br>'0 0' to disable"
     NewTransaction:
       type: object
       required:
         - amount
+        - category
         - account
         - timestamp
+        - notes
+        - recurrence
       properties:
         amount:
           type: number
@@ -312,6 +322,13 @@ components:
           type: string
     UpdateTransaction:
       type: object
+      required:
+        - amount
+        - category
+        - account
+        - timestamp
+        - notes
+        - recurrence
       properties:
         amount:
           type: number
@@ -338,6 +355,7 @@ components:
       required:
         - id
         - name
+        - color
       properties:
         id:
           type: number
@@ -351,6 +369,7 @@ components:
       type: object
       required:
         - name
+        - color
       properties:
         name:
           type: string
@@ -359,6 +378,9 @@ components:
           format: hex-color
     UpdateCategory:
       type: object
+      required:
+        - name
+        - color
       properties:
         name:
           type: string

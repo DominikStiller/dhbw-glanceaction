@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+
 import { SearchService } from './services/search.service';
 
 @Component({
@@ -8,8 +9,6 @@ import { SearchService } from './services/search.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'frontend';
-
   constructor(public search: SearchService,
               public router: Router) {
   }

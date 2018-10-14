@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
+
 import { GlanceactionService } from '../../services/glanceaction.service';
 import { Account, UpdateAccount } from '../../models/account';
 import { Category, UpdateCategory } from '../../models/category';
@@ -30,9 +31,7 @@ export class SettingsComponent implements OnInit {
     this.g.createAccount({
       name: this.newAccountName,
       initialBalance: this.newAccountInitialBalance,
-    }).subscribe(() => {
-      this.resetNewAccount();
-    });
+    }).subscribe(() => this.resetNewAccount());
   }
 
   updateAccount(a: Account) {
@@ -40,7 +39,8 @@ export class SettingsComponent implements OnInit {
       name: a.name,
       initialBalance: a.initialBalance,
     };
-    this.g.updateAccount(a, update).subscribe(() => alert('Account has been updated successfully.'));
+    this.g.updateAccount(a, update)
+      .subscribe(() => alert('Account has been updated successfully.'));
   }
 
   deleteAccount(a: Account) {
@@ -58,9 +58,7 @@ export class SettingsComponent implements OnInit {
     this.g.createCategory({
       name: this.newCategoryName,
       color: this.newCategoryColor,
-    }).subscribe(() => {
-      this.resetNewCategory();
-    });
+    }).subscribe(() => this.resetNewCategory());
   }
 
   updateCategory(c: Category) {
@@ -68,10 +66,11 @@ export class SettingsComponent implements OnInit {
       name: c.name,
       color: c.color,
     };
-    this.g.updateCategory(c, update).subscribe(() => alert('Category has been updated successfully.'));
+    this.g.updateCategory(c, update)
+      .subscribe(() => alert('Category has been updated successfully.'));
   }
 
-  deleteCategory(c: Account) {
+  deleteCategory(c: Category) {
     if (confirm(`Do you really want to delete the category "${c.name}"?`)) {
       this.g.deleteCategory(c).subscribe();
     }

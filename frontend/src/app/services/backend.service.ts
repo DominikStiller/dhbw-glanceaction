@@ -8,6 +8,11 @@ import { Category, NewCategory, UpdateCategory } from '../models/category';
 import { Account, NewAccount, UpdateAccount } from '../models/account';
 import { NewTransaction, Transaction, UpdateTransaction } from '../models/transaction';
 
+/**
+ * Service communicating with the backend via the REST API
+ *
+ * Do not use this service directly, insted use {@link GlanceactionService}
+ */
 @Injectable({
   providedIn: 'root',
 })
