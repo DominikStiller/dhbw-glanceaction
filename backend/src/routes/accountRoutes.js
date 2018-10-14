@@ -119,11 +119,12 @@ router.put('/accounts/:id([0-9]+)', [
   });
 });
 
+
 router.delete('/accounts/:id([0-9]+)', (req, res) => {
   util.log(util.format('/api/accounts/%i - DELETE-Request', req.params.id));
   const accountId = req.params.id;
 
-  // Deleting an account also deleted all transactions associated with this account. User confirmation in frontend!
+  // Deleting an account also deletes all transactions associated with this account. User confirmation in frontend!
   accounts.findOne({ _id: accountId }, (err, account) => {
     if (err) {
       return res.status(500).send();

@@ -1,24 +1,18 @@
-{"k":"0000000078","o":"0000000156","v":"001"}
-{"_id":4,"_uid":7,"_dt":1539450104812,"_s":"b61ce8c81ed0c7da015fba4e5f504d32"}
-{"name":"Einkauf","amount":0.9,"category":2,"recurrence":"0 0","account":14,"timestamp":"2018-01-01","_id":{"$wrap":"$oid","v":4},"notes":"Lidl lohnt sich"}
-{"k":"0000000078","o":"0000000142","v":"001"}
-{"_id":5,"_uid":7,"_dt":1539416283705,"_s":"6db570d7836b366d513fbde5062a3d4f"}
-{"name":"Mittagessen","amount":"6.50","category":null,"recurrence":"0 0","account":"14","timestamp":"2018-01-02","_id":{"$wrap":"$oid","v":5}}
-{"k":"0000000078","o":"0000000142","v":"001"}
-{"_id":6,"_uid":7,"_dt":1539324626401,"_s":"f316ade24a5dbf7140585ac8370096a8"}
-{"name":"Miete","amount":"420.00","category":"Miete","recurrence":"m 12","account":"14","timestamp":"2018-01-31","_id":{"$wrap":"$oid","v":6}}
-{"k":"0000000078","o":"0000000166","v":"001"}
-{"_id":7,"_uid":7,"_dt":1539324659060,"_s":"0944e233b3dc1f58053a32b82459e9b7"}
-{"name":"Bestechungsgeld Web-Engineering","amount":"100.00","category":"DHBW","recurrence":"3 8","account":"15","timestamp":"2018-01-01","_id":{"$wrap":"$oid","v":7}}
+{"k":"0000000079","o":"0000000157","v":"001"}
+{"_id":4,"_uid":24,"_dt":1539515983953,"_s":"fec476e57cb1e04bf820319ecef13db8"}
+{"name":"Einkauf","amount":9.99,"category":2,"recurrence":"0 0","account":31,"timestamp":"2018-01-01","_id":{"$wrap":"$oid","v":4},"notes":"Lidl lohnt sich"}
+{"k":"0000000079","o":"0000000134","v":"001"}
+{"_id":5,"_uid":24,"_dt":1539516028637,"_s":"c7916c6fa9c27b3255bb0ded6bd03ac2"}
+{"name":"Mittagessen","amount":6.5,"category":0,"recurrence":"0 0","account":31,"timestamp":"2018-01-02","_id":{"$wrap":"$oid","v":5}}
+{"k":"0000000079","o":"0000000129","v":"001"}
+{"_id":6,"_uid":24,"_dt":1539516146555,"_s":"3cc7c240b1c6293c5a20e62902a77637"}
+{"name":"Miete","amount":420,"category":0,"recurrence":"m 12","account":31,"timestamp":"2018-01-31","_id":{"$wrap":"$oid","v":6}}
+{"k":"0000000079","o":"0000000154","v":"001"}
+{"_id":7,"_uid":24,"_dt":1539516181228,"_s":"4e164daf2e62f6071cdefbc114f5dc0f"}
+{"name":"Bestechungsgeld Web-Engineering","amount":100,"category":4,"recurrence":"3 8","account":32,"timestamp":"2018-01-01","_id":{"$wrap":"$oid","v":7}}
 {"k":"0000000080","o":"0000000163","v":"001"}
-{"_id":23,"_uid":23,"_dt":1539500482211,"_s":"e1de84c52c4caa9b29708b5b7a2daab0"}
-{"name":"72vdasd91fhar473","amount":2.33,"category":0,"recurrence":"0 0","account":27,"timestamp":"2018-01-01","notes":"Some notes.","_id":{"$wrap":"$oid","v":23}}
+{"_id":25,"_uid":25,"_dt":1539516241606,"_s":"c41ec7881530c1e781261e1b6e3b37b8"}
+{"name":"72vdasd91fhar473","amount":2.33,"category":0,"recurrence":"0 0","account":33,"timestamp":"2018-01-01","notes":"Some notes.","_id":{"$wrap":"$oid","v":25}}
 {"k":"0000000051","o":"0000000000","v":"001"}
-{"_id":23,"_uid":23,"_dt":1539500482242,"_a":"del"}
-
-{"k":"0000000080","o":"0000000163","v":"001"}
-{"_id":24,"_uid":24,"_dt":1539501266709,"_s":"d5803967a2cb1355fa2e8c757cda975c"}
-{"name":"72vdasd91fhar473","amount":2.33,"category":0,"recurrence":"0 0","account":29,"timestamp":"2018-01-01","notes":"Some notes.","_id":{"$wrap":"$oid","v":24}}
-{"k":"0000000051","o":"0000000000","v":"001"}
-{"_id":24,"_uid":24,"_dt":1539501266729,"_a":"del"}
+{"_id":25,"_uid":25,"_dt":1539516241639,"_a":"del"}
 

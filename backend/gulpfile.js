@@ -22,18 +22,18 @@ gulp.task('lintSources', () => {
     .pipe(eslint.failAfterError());
 });
 
-gulp.task('minify', () => {
+gulp.task('minifySources', () => {
   return gulp.src(files.projectSources)
     .pipe(uglify())
     .pipe(gulp.dest('./build'));
 });
 
-gulp.task('clean', () => {
+gulp.task('cleanBuild', () => {
   return gulp.src('./build', { read: false })
     .pipe(clean());
 });
 
-gulp.task('generateDocumentation', (cb) => {
+gulp.task('createDocumentation', (cb) => {
   gulp.src(files.projectSources, { read: false })
     .pipe(jsdoc(config, cb));
 });
